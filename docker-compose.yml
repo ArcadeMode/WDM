@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
   api:
@@ -16,9 +16,18 @@ services:
       context: .
       dockerfile: src/Silo/Dockerfile
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
   mariadb:
     image: mariadb
     environment:
       - MYSQL_ROOT_PASSWORD=P@55w0rd
       - MYSQL_DATABASE=cart
+    volumes:
+      - ./src/Silo/OrleansAdoNetContent/MySQL:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=P@55w0rd"]
+      timeout: 1s
+      retries: 100

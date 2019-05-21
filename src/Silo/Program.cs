@@ -24,13 +24,13 @@ namespace Silo
                     options.ClusterId = "orleans-docker";
                     options.ServiceId = "sample-app";
                 })
-                //.AddAdoNetGrainStorage("CartStorage", options =>
-                    //{
-                    //    options.Invariant = "MySql.Data.MySqlClient";
-                    //    options.ConnectionString = "Server=mariadb;Database=cart;Uid=root;Pwd=P@55w0rd";
-                    //    options.UseJsonFormat = true;
-                    //})
-                .AddMemoryGrainStorage("CartStorage")
+                .AddAdoNetGrainStorage("CartStorage", options =>
+                    {
+                        options.Invariant = "MySql.Data.MySqlClient";
+                        options.ConnectionString = "Server=mariadb;Database=cart;Uid=root;Pwd=P@55w0rd";
+                        options.UseJsonFormat = true;
+                    })
+                //.AddMemoryGrainStorage("CartStorage")
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(CartGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
