@@ -43,7 +43,6 @@ namespace Cart.API
         private IClusterClient CreateClusterClient(IServiceProvider serviceProvider)
         {
             var client = new ClientBuilder()
-                // .UseLocalhostClustering( serviceId: "blog-orleans-deepdive")
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ICartGrain).Assembly).WithReferences())
                 .Configure<ClusterOptions>(options =>
                 {

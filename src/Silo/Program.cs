@@ -18,7 +18,6 @@ namespace Silo
         static void Main(string[] args)
         {
             silo = new SiloHostBuilder()
-                // .UseLocalhostClustering(serviceId:"blog-orleans-deepdive")
                 .Configure<ClusterOptions>(options =>
                 {
                     options.ClusterId = "orleans-docker";
