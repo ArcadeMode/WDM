@@ -9,6 +9,9 @@ namespace Grains
 {
     public class PaymentGrain : Grain, IPaymentGrain
     {
+
+        private PaymentStatus paymentstatus;
+
         public async Task<PaymentStatus> Pay()
         {
             throw new NotImplementedException();
