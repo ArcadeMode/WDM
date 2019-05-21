@@ -1,33 +1,25 @@
-version: '2.1'
+version: '3.4'
 
 services:
   api:
-    image: api
+    image: ${DOCKER_REGISTRY}api
     build:
       context: .
       dockerfile: src/Cart.API/Dockerfile
     ports:
-      - 80:80
+      - 8080:80
     depends_on:
       - silo
+    networks:
+      - my-net
   silo:
-    image: silo
+    image: ${DOCKER_REGISTRY}silo
     build:
       context: .
       dockerfile: src/Silo/Dockerfile
-    depends_on:
-      mariadb:
-        condition: service_healthy
-  mariadb:
-    image: mariadb
-    environment:
-      - MYSQL_ROOT_PASSWORD=P@55w0rd
-      - MYSQL_DATABASE=cart
-    volumes:
-      - ./src/Silo/OrleansAdoNetContent/MySQL:/docker-entrypoint-initdb.d
-    ports:
-      - 3306:3306
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=P@55w0rd"]
-      timeout: 1s
-      retries: 100
+    networks:
+      - my-net
+networks:
+  my-net:
+    driver: bridge
+    attachable: true
