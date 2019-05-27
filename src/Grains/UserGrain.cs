@@ -17,7 +17,7 @@ namespace Grains
         /// <summary>
         /// Adds or subtracts credit from the user's balance.
         /// </summary>
-        /// <param name="amount">Double indicating the change in balance. Positive to add, negative to substract</param>
+        /// <param name="amount">Double indicating the change in balance. Positive to add, negative to subtract</param>
         /// <returns>Boolean indicating if the change in balance could be made i.e. there was enough credit.</returns>
         public async Task<bool> ModifyCredit(double amount)
         {
@@ -28,7 +28,6 @@ namespace Grains
             }
             userBalance += amount;
             return true;
-
         }
 
         public Task<Guid> AddOrder()
