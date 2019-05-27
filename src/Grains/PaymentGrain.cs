@@ -19,17 +19,17 @@ namespace Grains
 
         public async Task<PaymentStatus> Pay()
         {
-            this.paymentstatus = 
+            this.paymentstatus = 1;
         }
 
         public async Task<PaymentStatus> Cancel()
         {
-            throw new NotImplementedException();
+            this.paymentstatus = 2;
         }
 
         public async Task<PaymentStatus> Status()
         {
-            throw new NotImplementedException();
+            return this.paymentstatus;
         } 
 
     }
