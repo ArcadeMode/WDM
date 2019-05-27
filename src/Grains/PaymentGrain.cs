@@ -19,12 +19,12 @@ namespace Grains
 
         public async Task<PaymentStatus> Pay()
         {
-            this.paymentstatus = 1;
+            this.paymentstatus = Paid;
         }
 
         public async Task<PaymentStatus> Cancel()
         {
-            this.paymentstatus = 2;
+            this.paymentstatus = Cancelled;
         }
 
         public async Task<PaymentStatus> Status()
