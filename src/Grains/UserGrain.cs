@@ -1,17 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrainInterfaces;
+using GrainInterfaces.States;
 using Orleans;
 
 namespace Grains
 {
-    public class UserGrain: Grain, IUserGrain
+    public class UserGrain: Grain<UserState>, IUserGrain
     {
-        private double userBalance;
-        
         public UserGrain()
         {
-            userBalance = 0;
+            State.UserBalance = 0;
+            State.CompletedOrderGuids = new List<Guid>();
+            State.ActiveOrderGuid = AddOrder().Result;
         }
 
         /// <summary>
@@ -21,23 +23,39 @@ namespace Grains
         /// <returns>Boolean indicating if the change in balance could be made i.e. there was enough credit.</returns>
         public async Task<bool> ModifyCredit(double amount)
         {
-            var balanceAfterChange = userBalance + amount;
+            var balanceAfterChange = State.UserBalance + amount;
             if (!(balanceAfterChange > 0))
             {
                 return false;
             }
-            userBalance += amount;
+            State.UserBalance += amount;
+            await WriteStateAsync();
             return true;
         }
 
-        public Task<Guid> AddOrder()
+        /// <summary>
+        /// Creates new OrderGrain for this user and sets it as the active order
+        /// </summary>
+        /// <returns>GUID of the newly created OrderGrain</returns>
+        public async Task<Guid> AddOrder()
         {
-            throw new NotImplementedException();
+            var orderGuid = Guid.NewGuid();
+            GrainFactory.GetGrain<IOrderGrain>(orderGuid);
+            State.ActiveOrderGuid = orderGuid;
+            await WriteStateAsync();
+            return orderGuid;
         }
 
-        public Task<bool> DeleteOrder(Guid guid)
+        
+        /// <summary>
+        /// Cancels the currently active order for this user (currently just wipes the order state)
+        /// </summary>
+        /// <returns>True if successful, false otherwise</returns>
+        public async Task<bool> CancelActiveOrder()
         {
-            throw new NotImplementedException();
+            var grain = GrainFactory.GetGrain<IOrderGrain>(State.ActiveOrderGuid);
+            await grain.CancelOrder();
+            return true;
         }
     }
 }

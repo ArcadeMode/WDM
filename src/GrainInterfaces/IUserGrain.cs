@@ -10,6 +10,6 @@ namespace GrainInterfaces
 
         Task<Guid> AddOrder();
 
-        Task<bool> DeleteOrder(Guid guid);
+        Task<bool> CancelActiveOrder();
     }
 }
