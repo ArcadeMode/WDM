@@ -12,9 +12,14 @@ namespace Grains
 
         private PaymentStatus paymentstatus;
 
+        public PaymentGrain()
+        {
+            this.paymentstatus = Pending;
+        }
+
         public async Task<PaymentStatus> Pay()
         {
-            throw new NotImplementedException();
+            this.paymentstatus = 
         }
 
         public async Task<PaymentStatus> Cancel()
