@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   api:
-    image: ${DOCKER_REGISTRY}api
+    image: api
     build:
       context: .
       dockerfile: src/Cart.API/Dockerfile
@@ -10,10 +10,8 @@ services:
       - 80:80
     depends_on:
       - silo
-    links:
-      - silo
   silo:
-    image: ${DOCKER_REGISTRY}silo
+    image: silo
     build:
       context: .
       dockerfile: src/Silo/Dockerfile
