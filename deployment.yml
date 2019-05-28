@@ -9,7 +9,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 5000
+    targetPort: 80
 ---
 apiVersion: apps/v1beta2
 kind: Deployment
@@ -30,9 +30,9 @@ spec:
       containers:
       - name: api
         image: wdm4containerregistry.azurecr.io/api:latest
-        args: ["url=http://0.0.0.0:5000", "silohost=silo" ]
+        args: ["url=http://0.0.0.0:80", "silohost=silo" ]
         ports:
-        - containerPort: 5000
+        - containerPort: 80
 ---
 kind: Service
 apiVersion: v1
@@ -45,8 +45,8 @@ spec:
     app: silo
   ports:
   - protocol: TCP
-    port: 40000
-    targetPort: 40000
+    port: 30000
+    targetPort: 30000
 ---
 apiVersion: apps/v1beta2
 kind: StatefulSet
@@ -71,9 +71,9 @@ spec:
           value: AKSCluster
         ports:
         - name: orleansgateway
-          containerPort: 40000
+          containerPort: 30000
         - name: orleansport
-          containerPort: 22222
+          containerPort: 11111
         volumeMounts:
           - name: secrets
             mountPath: "/etc/secrets"
