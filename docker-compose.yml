@@ -7,10 +7,8 @@ services:
       context: .
       dockerfile: src/Cart.API/Dockerfile
     ports:
-      - 80:80
+      - 8181:80
     depends_on:
-      - silo
-    links:
       - silo
   silo:
     image: ${DOCKER_REGISTRY}silo
