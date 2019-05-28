@@ -35,7 +35,7 @@ namespace Cart.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -54,7 +54,7 @@ namespace Cart.API
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ICartGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .Build();
-           
+
             StartClientWithRetries( client).Wait();
             return client;
         }

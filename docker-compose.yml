@@ -7,19 +7,16 @@ services:
       context: .
       dockerfile: src/Cart.API/Dockerfile
     ports:
-      - 8080:80
+      - 80:80
     depends_on:
       - silo
-    networks:
-      - my-net
+    links:
+      - silo
   silo:
     image: ${DOCKER_REGISTRY}silo
     build:
       context: .
       dockerfile: src/Silo/Dockerfile
-    networks:
-      - my-net
-networks:
-  my-net:
-    driver: bridge
-    attachable: true
+    ports:
+      - 8080:8080
+
