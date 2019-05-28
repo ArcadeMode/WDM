@@ -2,19 +2,18 @@ version: '3.4'
 
 services:
   api:
-    image: api
+    image: ${DOCKER_REGISTRY}api
     build:
       context: .
       dockerfile: src/Cart.API/Dockerfile
     ports:
       - 80:80
-    depends_on:
+    links:
       - silo
+
   silo:
-    image: silo
+    image: ${DOCKER_REGISTRY}silo
     build:
       context: .
       dockerfile: src/Silo/Dockerfile
-    ports:
-      - 8080:8080
 

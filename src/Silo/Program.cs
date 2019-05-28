@@ -1,4 +1,4 @@
-﻿using Grains;
+using Grains;
 using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Configuration;
@@ -17,6 +17,7 @@ namespace Silo
         private static ISiloHost silo;
         private static readonly ManualResetEvent siloStopped = new ManualResetEvent(false);
         private static readonly string AzureConnectionString = "DefaultEndpointsProtocol=https;AccountName=orleansstorage;AccountKey=+NuxKTXei7RwvIbwDQSba2MJYMUM2nXmEVpT6SoGuZuW1rqXhocnqKJEhQG2OmuPVaX6JaQsndEcC4vOBD7dXg==;EndpointSuffix=core.windows.net";
+        private static readonly string DebugConnectionString = "UseDevelopmentStorage=true";
 
 
         static async Task Main(string[] args)
