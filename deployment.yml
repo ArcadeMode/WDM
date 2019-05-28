@@ -1,0 +1,85 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: api
+spec:
+  type: LoadBalancer
+  selector:
+    app: api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: wdm4containerregistry.azurecr.io/api:latest
+        args: ["url=http://0.0.0.0:5000", "silohost=silo" ]
+        ports:
+        - containerPort: 5000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: silo
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: silo
+  ports:
+  - protocol: TCP
+    port: 40000
+    targetPort: 40000
+---
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: silo
+spec:
+  selector:
+    matchLabels:
+      app: silo
+  serviceName: silo
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: silo
+    spec:
+      containers:
+      - name: silo
+        image: wdm4containerregistry.azurecr.io/silo:latest
+        env:
+        - name: ClusterId
+          value: AKSCluster
+        ports:
+        - name: orleansgateway
+          containerPort: 40000
+        - name: orleansport
+          containerPort: 22222
+        volumeMounts:
+          - name: secrets
+            mountPath: "/etc/secrets"
+            readOnly: true
+      volumes:
+      - name: secrets
+        secret:
+          secretName: orleanssecret
+
