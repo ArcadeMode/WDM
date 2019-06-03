@@ -9,11 +9,11 @@ namespace GrainInterfaces
 {
     public interface IPaymentGrain : IGrainWithGuidKey
     {
-        Task<PaymentStatus> Pay();
+        Task<int> Pay();
 
-        Task<PaymentStatus> Cancel();
+        Task<int> Cancel();
 
-        Task<PaymentStatus> Status();
+        Task<int> Status();
 
     }
 }
