@@ -51,6 +51,8 @@ namespace Grains
 
             State.Value.Stock = State.Value.Stock + amount;
 
+            await WriteStateAsync();
+
             return State.Value.Stock
         }
 
@@ -59,6 +61,8 @@ namespace Grains
             await ReadStateAsync();
 
             State.Value.Price = newPrice;
+
+            await WriteStateAsync();
 
             return State.Value.Price
         }
