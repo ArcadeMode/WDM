@@ -4,9 +4,11 @@ using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
 using System;
+using System.Net.Http;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 namespace Silo
 {
@@ -14,32 +16,30 @@ namespace Silo
     {
         private static ISiloHost silo;
         private static readonly ManualResetEvent siloStopped = new ManualResetEvent(false);
+        private static readonly string AzureConnectionString = "DefaultEndpointsProtocol=https;AccountName=orleansstorage;AccountKey=+NuxKTXei7RwvIbwDQSba2MJYMUM2nXmEVpT6SoGuZuW1rqXhocnqKJEhQG2OmuPVaX6JaQsndEcC4vOBD7dXg==;EndpointSuffix=core.windows.net";
 
-        static void Main(string[] args)
+
+        static async Task Main(string[] args)
         {
             silo = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-docker";
-                    options.ServiceId = "sample-app";
+                    options.ClusterId = "orleans-wdm4-cluster";
+                    options.ServiceId = "orleans-wdm4-service";
                 })
-                .AddAdoNetGrainStorage("CartStorage", options =>
-                    {
-                        options.Invariant = "MySql.Data.MySqlClient";
-                        options.ConnectionString = "Server=mariadb;Database=cart;Uid=root;Pwd=P@55w0rd";
-                        options.UseJsonFormat = true;
-                    })
-                //.AddMemoryGrainStorage("CartStorage")
+                .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(CartGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
-                //.UseDashboard()
+                .UseDashboard()
                 .Build();
 
             Task.Run(StartSilo);
 
             AssemblyLoadContext.Default.Unloading += context =>
             {
+                Console.WriteLine("Stopping silo");
                 Task.Run(StopSilo);
                 siloStopped.WaitOne();
             };
