@@ -29,7 +29,7 @@ namespace Cart.API.Controllers
         public async Task<List<Product>> GetProduct(Guid id)
         {
             var grain = _client.GetGrain<ICartGrain>(id);
-           return await grain.GetProducts();
+            return await grain.GetProducts();
         }
 
         [HttpPost("{id}/product")]
