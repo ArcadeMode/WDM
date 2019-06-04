@@ -8,7 +8,7 @@ namespace GrainInterfaces
     {
         Task<bool> AddItem(Guid itemGuid);
 
-        Task<Guid> RemoveItem(Guid itemGuid);
+        Task<bool> RemoveItem(Guid itemGuid);
 
         Task<bool> CancelOrder();
 

@@ -7,19 +7,60 @@ namespace Grains
 {
     public class OrderGrain: Grain<OrderState>, IOrderGrain
     {
-        public Task<bool> AddItem(Guid itemGuid)
+
+        public async Task<Cart> GetOrder()
         {
-            throw new NotImplementedException();
+            await ReadStateAsync();
+            
+            if (State.Value != null) return State.Value;
+
+            State.Value = new Order
+            {
+                Id =  Guid.NewGuid(),
+                Items = new List<Items>()
+            };
+
+            await WriteStateAsync();
+            
+            return State.Value;
         }
 
-        public Task<Guid> RemoveItem(Guid itemGuid)
+        public Task<bool> AddItem(Guid itemGuid)
         {
-            throw new NotImplementedException();
+            await ReadStateAync();
+
+            if (State.Value == null)
+            {
+                State = new OrderState();
+            }
+        
+            State.Value.Items.Add(itemGuid)
+
+            await WriteStateAsync();
+
+            return true;
+        }
+
+        public Task<bool> RemoveItem(Guid itemGuid)
+        {
+            await ReadStateAync();
+
+            if (State.Value == null)
+            {
+                State = new OrderState();
+            }
+        
+            State.Value.Items.Remove(itemGuid)
+
+            await WriteStateAsync();
+
+            return true;
         }
 
         public async Task<bool> CancelOrder()
         {
             await ClearStateAsync();
+
             return true;
         }
 
@@ -27,9 +68,5 @@ namespace Grains
         {
             throw new NotImplementedException();
         }
-    }
-
-    public class OrderState
-    {
     }
 }
