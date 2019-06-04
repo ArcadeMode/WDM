@@ -12,14 +12,15 @@ namespace Grains
     public class ItemGrain : Grain<ItemState>, IItemGrain
     {
 
-        public async Task<Item> createItem() {
+        public async Task<Item> CreateItem() {
 
             await ReadStateAsync();
 
             State.Value = new Item
             {
                 Id =  Guid.NewGuid(),
-                Products = new List<Product>()
+                Price = 0,
+                Stock = 0
             };
 
             await WriteStateAsync();
@@ -37,19 +38,30 @@ namespace Grains
             return null;
         }
 
-        public async Task AddProduct(Product product)
+        public async Task<Item> GetAvailability()
         {
             await ReadStateAsync();
 
-            if (State.Value == null)
-            {
-                State = new CartState();
-            }
-            
-            State.Value.Products.Add(product);
-            await WriteStateAsync();
+            return State.Value.Stock;
         }
-        
+
+        public async Task<Item> ModifyStock(int amount)
+        {
+            await ReadStateAsync();
+
+            State.Value.Stock = State.Value.Stock + amount;
+
+            return State.Value.Stock
+        }
+
+        public async Task<Item> ModifyPrice(decimal newPrice)
+        {
+            await ReadStateAsync();
+
+            State.Value.Price = newPrice;
+
+            return State.Value.Price
+        }
         
     }
 

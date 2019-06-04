@@ -9,11 +9,11 @@ using Orleans;
 namespace Stock.API.Controllers
 {
     [Route("api/stock")]
-    public class ItemController : Controller
+    public class StockController : Controller
     {
         private readonly IClusterClient _client;
         
-        public ItemController(IClusterClient client)
+        public StockController(IClusterClient client)
         {
             _client = client;
         }
@@ -22,6 +22,7 @@ namespace Stock.API.Controllers
         public async Task<GrainInterfaces.States.Item> Get(Guid id)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
+            //TODO: Check if item is there?
             return await grain.GetAvailability();
         }
 
@@ -29,6 +30,7 @@ namespace Stock.API.Controllers
         public async Task<GrainInterfaces.States.Item> SubtractStock(Guid id, int amount)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
+            //TODO: Check if item is there?
             return await grain.modifyStock(-1*amount);
         }
 
@@ -36,23 +38,15 @@ namespace Stock.API.Controllers
         public async Task<GrainInterfaces.States.Item> AddStock(Guid id, int amount)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
+            //TODO: Check if item is there?
             return await grain.modifyStock(amount);
         }
 
-        /stock/add/{item_id}/{number}
-        
-        [HttpGet("{id}/product")]
-        public async Task<List<Product>> GetProduct(Guid id)
+        [HttpPost("item/create")]
+        public async Task<GrainInterfaces.States.Item> CreateItem()
         {
-            var grain = _client.GetGrain<IItemGrain>(id);
-            return await grain.GetProducts(-1* amount);
-        }
-
-        [HttpPost("{id}/product")]
-        public async Task AddProduct(Guid id, [FromBody]Product product)
-        {
-            var grain = _client.GetGrain<IItemGrain>(id);
-            await grain.AddProduct(product);
+            var item = _client.CreateItem()
+            return await grain.GetItem().Id
         }
      
     }

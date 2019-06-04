@@ -7,11 +7,11 @@ namespace GrainInterfaces.States
     [Serializable]
     public class Item
     {
-        public Guid ItemID { get; set; }
+        public Guid Id { get; set; }
 
-        public int ItemStock { get; set; }
+        public int Stock { get; set; }
 
-        public decimal ItemPrice { get; }
+        public decimal Price { get; set; }
     }
 
     [Serializable]
