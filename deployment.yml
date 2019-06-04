@@ -33,6 +33,8 @@ spec:
         args: ["url=http://0.0.0.0:80", "silohost=silo" ]
         ports:
         - containerPort: 80
+      imagePullSecrets:
+        - name: wdm4secret
 ---
 kind: Service
 apiVersion: v1
@@ -78,6 +80,8 @@ spec:
           - name: secrets
             mountPath: "/etc/secrets"
             readOnly: true
+        imagePullSecrets:
+        - name: wdm4secret
       volumes:
       - name: secrets
         secret:
