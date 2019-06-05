@@ -40,6 +40,7 @@ namespace Cart.API
             }
 
             app.UseMvc();
+            app.UseWelcomePage();
             app.UseDefaultFiles();
             app.UseStaticFiles();
         }
