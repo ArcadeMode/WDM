@@ -25,18 +25,20 @@ namespace Silo
             silo = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster";
-                    options.ServiceId = "orleans-wdm4-service";
+                    options.ClusterId = "orleans-wdm4-cluster-niek";
+                    options.ServiceId = "orleans-wdm4-service-niek";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("PaymentStorage", ob => ob.ConnectionString = AzureConnectionString)
-                .AddAzureTableTransactionalStateStorage("TransactionStore", opt => opt.ConnectionString = AzureConnectionString)
+                //.AddAzureTableTransactionalStateStorage("TransactionStore", opt => opt.ConnectionString = AzureConnectionString)
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
+                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ItemGrain).Assembly).WithReferences())
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(CartGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .UseDashboard()
-                .UseTransactions()
+                //.UseTransactions()
                 .Build();
 
             Task.Run(StartSilo);

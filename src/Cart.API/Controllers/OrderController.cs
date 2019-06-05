@@ -4,7 +4,7 @@ using GrainInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 
-namespace Order.API.Controllers
+namespace Cart.API.Controllers
 {
     [Route("api/orders")]
     public class OrderController : Controller

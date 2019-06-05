@@ -29,16 +29,19 @@ namespace Grains
    
         public async Task<Item> GetItem()
         {
+            await ReadStateAsync();
             return State.Value;
         }
 
         public async Task<int> GetAvailability()
         {
+            await ReadStateAsync();
             return State.Value.Stock;
         }
 
         public async Task<int> ModifyStock(int amount)
         {
+            await ReadStateAsync();
             State.Value.Stock += amount;
             return State.Value.Stock;
         }
