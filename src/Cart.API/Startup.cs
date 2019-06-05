@@ -57,7 +57,8 @@ namespace Cart.API
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IOrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .Build();
-
+            
+            Console.WriteLine("API CLUSTERCLIENT CONNECTION ATTEMPT STARTED");
             client.Connect(RetryFilter).GetAwaiter().GetResult();
             return client;
 
