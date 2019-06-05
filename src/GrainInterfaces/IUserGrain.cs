@@ -10,7 +10,7 @@ namespace GrainInterfaces
         Task<int> GetCredit();
 
         [Transaction(TransactionOption.CreateOrJoin)]
-        Task<bool> ModifyCredit(double amount);
+        Task<bool> ModifyCredit(decimal amount);
 
         Task<Guid> AddOrder();
 

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using GrainInterfaces.States;
 using Orleans;
 
 namespace GrainInterfaces
@@ -7,6 +8,8 @@ namespace GrainInterfaces
     public interface IOrderGrain: IGrainWithGuidKey
     {
         Task<bool> SetUser(IUserGrain userGrain);
+
+        Task<Order> GetOrder();
 
         Task<bool> AddItem(Guid itemGuid);
 

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrainInterfaces;
-using GrainInterfaces.States;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 
@@ -26,14 +24,14 @@ namespace Order.API.Controllers
         }
 
         [HttpGet("/remove/{id}")]
-        public async Task<List<Item>> CancelOrder(Guid id)
+        public async Task CancelOrder(Guid id)
         {
             var grain = _client.GetGrain<IOrderGrain>(id);
-            return await grain.CancelOrder();
+            await grain.CancelOrder();
         }
         
         [HttpGet("/find/{id}")]
-        public async Task<Order> GetItem(Guid id)
+        public async Task<GrainInterfaces.States.Order> GetOrder(Guid id)
         {
             var grain = _client.GetGrain<IOrderGrain>(id);
             return await grain.GetOrder();

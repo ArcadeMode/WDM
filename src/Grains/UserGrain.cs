@@ -21,7 +21,7 @@ namespace Grains
         /// Gets the current credit from the user's balance.
         /// </summary>
         /// <returns>The current user's balance</returns>
-        Task<int> IAccountGrain.GetCredit()
+        Task<int> IUserGrain.GetCredit()
         {
             return State.UserBalance.PerformRead(x => x.Value);
         }
@@ -31,12 +31,12 @@ namespace Grains
         /// </summary>
         /// <param name="amount">Double indicating the change in balance. Positive to add, negative to subtract</param>
         /// <returns>Boolean indicating if the change in balance could be made i.e. there was enough credit.</returns>
-        public async Task<bool> ModifyCredit(double amount)
+        public Task<bool> ModifyCredit(decimal amount)
         {
             var balanceAfterChange = State.UserBalance + amount;
             if (!(balanceAfterChange > 0))
             {
-                throw new OrleansTransactionException("Not enough credits!");
+                throw new Exception("Not enough credits!");
             }
             
             return State.UserBalance.PerformUpdate(x => x.Value += amount);

@@ -11,7 +11,7 @@ namespace GrainInterfaces.States
         
         public Dictionary<Guid, int> Items { get; set; }
 
-        public IOrderGrain User { get; set; }
+        public IUserGrain User { get; set; }
 
         //TODO: should be changed to get all items from the list of Ids, and then sum the price.
         // public decimal Total
