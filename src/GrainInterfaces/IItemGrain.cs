@@ -11,8 +11,8 @@ namespace GrainInterfaces
         
         Task<int> GetAvailability();
         
-        Task ModifyStock(int amount);
+        Task<int> ModifyStock(int amount);
 
-        Task ModifyPrice(decimal newPrice);
+        Task<decimal> ModifyPrice(decimal newPrice);
     }
 }

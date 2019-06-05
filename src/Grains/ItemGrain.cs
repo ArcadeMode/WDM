@@ -12,59 +12,41 @@ namespace Grains
     public class ItemGrain : Grain<ItemState>, IItemGrain
     {
 
-        public async Task<Item> CreateItem() {
+        public override Task OnActivateAsync() {
 
-            await ReadStateAsync();
+            if (State.Value == null) {
 
-            State.Value = new Item
-            {
-                Id =  Guid.NewGuid(),
-                Price = 0,
-                Stock = 0
-            };
+                State.Value = new Item
+                {
+                    Id = Guid.NewGuid(),
+                    Price = 0,
+                    Stock = 0
+                };
+            }
 
-            await WriteStateAsync();
-            
-            return State.Value;
+            return Task.CompletedTask;
         }
    
         public async Task<Item> GetItem()
         {
-            await ReadStateAsync();
-            
-            if (State.Value != null) return State.Value;
-            
-            //Todo: What should be returned when not an item?
-            return null;
+            return State.Value;
         }
 
-        public async Task<Item> GetAvailability()
+        public async Task<int> GetAvailability()
         {
-            await ReadStateAsync();
-
             return State.Value.Stock;
         }
 
-        public async Task<Item> ModifyStock(int amount)
+        public async Task<int> ModifyStock(int amount)
         {
-            await ReadStateAsync();
-
-            State.Value.Stock = State.Value.Stock + amount;
-
-            await WriteStateAsync();
-
-            return State.Value.Stock
+            State.Value.Stock += amount;
+            return State.Value.Stock;
         }
 
-        public async Task<Item> ModifyPrice(decimal newPrice)
+        public async Task<decimal> ModifyPrice(decimal newPrice)
         {
-            await ReadStateAsync();
-
             State.Value.Price = newPrice;
-
-            await WriteStateAsync();
-
-            return State.Value.Price
+            return State.Value.Price;
         }
         
     }

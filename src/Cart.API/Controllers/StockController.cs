@@ -19,7 +19,7 @@ namespace Stock.API.Controllers
         }
       
         [HttpGet("availability/{id}")]
-        public async Task<GrainInterfaces.States.Item> Get(Guid id)
+        public async Task<int> Get(Guid id)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
             //TODO: Check if item is there?
@@ -27,26 +27,27 @@ namespace Stock.API.Controllers
         }
 
         [HttpGet("subtract/{id}/{amount}")]
-        public async Task<GrainInterfaces.States.Item> SubtractStock(Guid id, int amount)
+        public async Task<int> SubtractStock(Guid id, int amount)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
             //TODO: Check if item is there?
-            return await grain.modifyStock(-1*amount);
+            return await grain.ModifyStock(-1*amount);
         }
 
         [HttpGet("add/{id}/{amount}")]
-        public async Task<GrainInterfaces.States.Item> AddStock(Guid id, int amount)
+        public async Task<int> AddStock(Guid id, int amount)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
             //TODO: Check if item is there?
-            return await grain.modifyStock(amount);
+            return await grain.ModifyStock(amount);
         }
 
         [HttpPost("item/create")]
-        public async Task<GrainInterfaces.States.Item> CreateItem()
+        public async Task<Item> CreateItem(decimal price, int stock)
         {
-            var item = _client.CreateItem()
-            return await grain.GetItem().Id
+            var guid = Guid.NewGuid();
+            var grain = _client.GetGrain<IItemGrain>(guid);
+            return await grain.GetItem();
         }
      
     }
