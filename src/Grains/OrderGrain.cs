@@ -2,9 +2,11 @@ using System;
 using System.Threading.Tasks;
 using GrainInterfaces;
 using Orleans;
+using Orleans.Providers;
 
 namespace Grains
 {
+    [StorageProvider(ProviderName="OrderStorage")]
     public class OrderGrain: Grain<OrderState>, IOrderGrain
     {
         public Task<bool> AddItem(Guid itemGuid)
