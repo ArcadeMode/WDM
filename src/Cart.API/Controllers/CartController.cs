@@ -21,7 +21,7 @@ namespace Cart.API.Controllers
         [HttpGet("hello")]
         public string Get()
         {
-            return "Hello World"
+            return "Hello World";
         }
 
         [HttpGet("{id}")]
