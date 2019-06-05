@@ -31,10 +31,12 @@ namespace Silo
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("PaymentStorage", ob => ob.ConnectionString = AzureConnectionString)
+                .AddAzureTableTransactionalStateStorage("TransactionStore", opt => opt.ConnectionString = AzureConnectionString)
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(CartGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .UseDashboard()
+                .UseTransactions()
                 .Build();
 
             Task.Run(StartSilo);

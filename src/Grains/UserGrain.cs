@@ -9,11 +9,21 @@ namespace Grains
 {
     public class UserGrain: Grain<UserState>, IUserGrain
     {
+
         public UserGrain()
         {
             State.UserBalance = 0;
             State.CompletedOrderGuids = new List<Guid>();
             State.ActiveOrderGuid = AddOrder().Result;
+        }
+
+        /// <summary>
+        /// Gets the current credit from the user's balance.
+        /// </summary>
+        /// <returns>The current user's balance</returns>
+        Task<int> IAccountGrain.GetCredit()
+        {
+            return State.UserBalance.PerformRead(x => x.Value);
         }
 
         /// <summary>
@@ -26,11 +36,10 @@ namespace Grains
             var balanceAfterChange = State.UserBalance + amount;
             if (!(balanceAfterChange > 0))
             {
-                return false;
+                throw new OrleansTransactionException("Not enough credits!");
             }
-            State.UserBalance += amount;
-            await WriteStateAsync();
-            return true;
+            
+            return State.UserBalance.PerformUpdate(x => x.Value += amount);
         }
 
         /// <summary>
@@ -40,7 +49,7 @@ namespace Grains
         public async Task<Guid> AddOrder()
         {
             var orderGuid = Guid.NewGuid();
-            GrainFactory.GetGrain<IOrderGrain>(orderGuid);
+            GrainFactory.GetGrain<IOrderGrain>(orderGuid).SetUser(this);
             State.ActiveOrderGuid = orderGuid;
             await WriteStateAsync();
             return orderGuid;
