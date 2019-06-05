@@ -18,6 +18,12 @@ namespace Cart.API.Controllers
             _client = client;
         }
       
+        [HttpGet("hello")]
+        public string Get()
+        {
+            return "Hello World"
+        }
+
         [HttpGet("{id}")]
         public async Task<GrainInterfaces.States.Cart> Get(Guid id)
         {
