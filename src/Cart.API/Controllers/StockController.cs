@@ -6,7 +6,7 @@ using GrainInterfaces.States;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 
-namespace Stock.API.Controllers
+namespace Cart.API.Controllers
 {
     [Route("api/stock")]
     public class StockController : Controller
