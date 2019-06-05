@@ -54,11 +54,7 @@ namespace Cart.API
                     options.ServiceId = "orleans-wdm4-service";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ICartGrain).Assembly).WithReferences())
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IItemGrain).Assembly).WithReferences())
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IPaymentGrain).Assembly).WithReferences())
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IOrderGrain).Assembly).WithReferences())
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IUserGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .Build();
 

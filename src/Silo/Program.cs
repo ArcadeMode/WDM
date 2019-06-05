@@ -35,7 +35,7 @@ namespace Silo
                 .AddAzureTableGrainStorage("OrderStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("PaymentStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(CartGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(OrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .UseDashboard()
                 .Build();
