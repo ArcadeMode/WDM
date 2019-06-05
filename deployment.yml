@@ -49,9 +49,12 @@ spec:
   - protocol: TCP
     port: 30000
     targetPort: 30000
+  - protocol: TCP
+    port: 11111
+    targetPort: 11111
 ---
 apiVersion: apps/v1beta2
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: silo
 spec:
