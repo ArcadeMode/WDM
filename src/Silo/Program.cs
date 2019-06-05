@@ -25,8 +25,8 @@ namespace Silo
             silo = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster";
-                    options.ServiceId = "orleans-wdm4-service";
+                    options.ClusterId = "orleans-wdm4-cluster-aks";
+                    options.ServiceId = "orleans-wdm4-service-aks";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
