@@ -26,7 +26,7 @@ namespace Grains
         public async Task<bool> ModifyCredit(double amount)
         {
             var balanceAfterChange = State.UserBalance + amount;
-            if (!(balanceAfterChange > 0))
+            if (!(balanceAfterChange >= 0))
             {
                 return false;
             }
