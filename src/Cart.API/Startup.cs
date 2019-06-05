@@ -50,8 +50,8 @@ namespace Cart.API
             var client = new ClientBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster";
-                    options.ServiceId = "orleans-wdm4-service";
+                    options.ClusterId = "orleans-wdm4-cluster-aks";
+                    options.ServiceId = "orleans-wdm4-service-aks";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IOrderGrain).Assembly).WithReferences())
