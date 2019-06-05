@@ -49,9 +49,11 @@ spec:
   - protocol: TCP
     port: 30000
     targetPort: 30000
+    name: a
   - protocol: TCP
     port: 11111
     targetPort: 11111
+    name: b
 ---
 apiVersion: apps/v1beta2
 kind: Deployment
