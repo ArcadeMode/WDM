@@ -31,6 +31,7 @@ spec:
       containers:
       - name: api
         image: wdm4containerregistry.azurecr.io/api:latest
+        imagePullPolicy: Always
 #        args: ["url=http://0.0.0.0:80", "silohost=silo" ]
         ports:
         - containerPort: 80
@@ -74,6 +75,7 @@ spec:
       containers:
       - name: silo
         image: wdm4containerregistry.azurecr.io/silo:latest
+        imagePullPolicy: Always
         env:
         - name: ClusterId
           value: AKSCluster
