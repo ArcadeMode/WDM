@@ -32,31 +32,9 @@ spec:
       - name: api
         image: wdm4containerregistry.azurecr.io/api:latest
         imagePullPolicy: Always
-#        args: ["url=http://0.0.0.0:80", "silohost=silo" ]
         ports:
         - containerPort: 80
-#      imagePullSecrets:
-#        - name: wdm4secret
 ---
-#kind: Service
-#apiVersion: v1
-#metadata:
-#  name: silo-service
-#spec:
-#  type: ClusterIP
-#  clusterIP: None
-#  selector:
-#    app: silo
-#  ports:
-#  - protocol: TCP
-#    port: 30000
-#    targetPort: 30000
-#    name: a
-#  - protocol: TCP
-#    port: 11111
-#    targetPort: 11111
-#    name: b
-#---
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
@@ -84,14 +62,3 @@ spec:
           containerPort: 30000
         - name: orleansport
           containerPort: 11111
-#        volumeMounts:
-#          - name: secrets
-#            mountPath: "/etc/secrets"
-#            readOnly: true
-#        imagePullSecrets:
-#        - name: wdm4secret
-#      volumes:
-#      - name: secrets
-#        secret:
-#          secretName: orleanssecret
-
