@@ -1,15 +1,16 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: api
+  name: api-service
 spec:
   type: LoadBalancer
   selector:
     app: api
   ports:
-  - protocol: TCP
-    port: 80
+  - port: 80
     targetPort: 80
+    protocol: TCP
+    name: http
 ---
 apiVersion: apps/v1beta2
 kind: Deployment
@@ -30,26 +31,12 @@ spec:
       containers:
       - name: api
         image: wdm4containerregistry.azurecr.io/api:latest
-        args: ["url=http://0.0.0.0:80", "silohost=silo" ]
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---
-kind: Service
-apiVersion: v1
-metadata:
-  name: silo
-spec:
-  type: ClusterIP
-  clusterIP: None
-  selector:
-    app: silo
-  ports:
-  - protocol: TCP
-    port: 30000
-    targetPort: 30000
----
 apiVersion: apps/v1beta2
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: silo
 spec:
@@ -66,6 +53,7 @@ spec:
       containers:
       - name: silo
         image: wdm4containerregistry.azurecr.io/silo:latest
+        imagePullPolicy: Always
         env:
         - name: ClusterId
           value: AKSCluster
@@ -74,12 +62,3 @@ spec:
           containerPort: 30000
         - name: orleansport
           containerPort: 11111
-        volumeMounts:
-          - name: secrets
-            mountPath: "/etc/secrets"
-            readOnly: true
-      volumes:
-      - name: secrets
-        secret:
-          secretName: orleanssecret
-
