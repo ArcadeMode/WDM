@@ -8,16 +8,8 @@ namespace GrainInterfaces
 {
     public interface IUserGrain: IGrainWithGuidKey
     {
-        [Transaction(TransactionOption.RequiresNew)]
         Task<decimal> GetCredit();
 
-        [Transaction(TransactionOption.RequiresNew)]
         Task ModifyCredit(decimal amount);
-
-        Task<Guid> AddOrder();
-
-        Task<List<Guid>> GetOrders();
-
-//        Task<bool> CancelActiveOrder();
     }
 }

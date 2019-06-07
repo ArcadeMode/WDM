@@ -7,13 +7,6 @@ namespace GrainInterfaces.States
     [Serializable]
     public class UserState
     {
-        public ITransactionalState<Balance> UserBalance { get; set; }
-        public List<Guid> OrderGuids { get; set; }
-    }
-    
-    [Serializable]
-    public class Balance
-    {
-        public decimal Value { get; set; }
+        public decimal Balance { get; set; }
     }
 }

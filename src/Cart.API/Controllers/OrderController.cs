@@ -20,16 +20,12 @@ namespace Cart.API.Controllers
         public async Task<Guid> Get(Guid userId)
         {
             var userGrain = _client.GetGrain<IUserGrain>(userId);
-            var newOrderGuid = await userGrain.AddOrder();
+            var newOrderGuid = Guid.NewGuid();
+            var orderGrain = _client.GetGrain<IOrderGrain>(newOrderGuid);
+            
+            await orderGrain.SetUser(userGrain);
+            
             return newOrderGuid;
-        }
-        
-        [HttpPost("createUser")]
-        public async Task<Guid> newUser()
-        {
-            var userGuid = Guid.NewGuid();
-            _client.GetGrain<IUserGrain>(userGuid);
-            return userGuid;
         }
 
         [HttpPost("/remove/{id}")]

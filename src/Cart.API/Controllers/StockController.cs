@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrainInterfaces;
 using GrainInterfaces.States;
@@ -47,7 +46,6 @@ namespace Cart.API.Controllers
         {
             var guid = Guid.NewGuid();
             var grain = _client.GetGrain<IItemGrain>(guid);
-            await grain.ModifyPrice(1);
             return await grain.GetItem();
         }
      

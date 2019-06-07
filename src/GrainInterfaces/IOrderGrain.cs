@@ -17,7 +17,6 @@ namespace GrainInterfaces
 
         Task<bool> CancelOrder();
 
-        [Transaction(TransactionOption.Required)]
         Task<bool> Checkout();
     }
 }
