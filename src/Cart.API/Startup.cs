@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GrainInterfaces;
-using Grains;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +40,7 @@ namespace Cart.API
             }
 
             app.UseMvc();
+            app.UseWelcomePage();
             app.UseDefaultFiles();
             app.UseStaticFiles();
         }
@@ -51,21 +51,22 @@ namespace Cart.API
             var client = new ClientBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster-marc2";
-                    options.ServiceId = "orleans-wdm4-service-marc2";
+                    options.ClusterId = "orleans-wdm4-cluster-aks";
+                    options.ServiceId = "orleans-wdm4-service-aks";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(OrderGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IOrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .Build();
-
+            
+            Console.WriteLine("API CLUSTERCLIENT CONNECTION ATTEMPT STARTED");
             client.Connect(RetryFilter).GetAwaiter().GetResult();
             return client;
 
             //https://github.com/dotnet/orleans/issues/5158
             async Task<bool> RetryFilter(Exception exception)
             {
-                Console.WriteLine("Exception while attempting to connect to Orleans cluster: {0}", exception);
+                Console.WriteLine("Exception while attempting to connect to Orleans cluster: {Exception}", exception);
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 return true;
             }
