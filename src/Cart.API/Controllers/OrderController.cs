@@ -8,7 +8,7 @@ using Orleans;
 namespace Cart.API.Controllers
 {
     [Route("api/order")]
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
         private readonly IClusterClient _client;
         
@@ -17,7 +17,7 @@ namespace Cart.API.Controllers
             _client = client;
         }
       
-        [HttpPost("create/{id}")]
+        [HttpPost("{id}")]
         public async Task<ActionResult> Create(Guid userId)
         {
             var userGrain = _client.GetGrain<IUserGrain>(userId);
@@ -26,7 +26,7 @@ namespace Cart.API.Controllers
             return Ok(orderGrain.GetPrimaryKey());
         }
 
-        [HttpPost("remove/{id}")]
+        [HttpDelete("{id}")]
         public async Task CancelOrder(Guid id)
         {
             //TODO change to actual deletion of order? I mean, /remove/ right?
@@ -34,7 +34,7 @@ namespace Cart.API.Controllers
             await grain.CancelOrder();
         }
         
-        [HttpGet("find/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult> GetOrder(Guid id)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(id);
@@ -46,7 +46,7 @@ namespace Cart.API.Controllers
             return Ok(await orderGrain.GetOrder());
         }
 
-        [HttpPost("/addItem/{orderId}/{itemId}")]
+        [HttpPost("/{orderId}/addItem/{itemId}")]
         public async Task<ActionResult> AddItem(Guid orderId, Guid itemId)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
@@ -61,10 +61,10 @@ namespace Cart.API.Controllers
                 await orderGrain.AddItem(itemGrain);
                 return Ok(orderGrain);
             }
-            return NotFound("Item was not found");
+            return NotFound("Item not found");
         }
 
-        [HttpPost("/removeItem/{orderId}/{itemId}")]
+        [HttpPost("/{orderId}/removeItem/{itemId}")]
         public async Task<ActionResult> RemoveItem(Guid orderId, Guid itemId)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);

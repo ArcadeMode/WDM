@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Cart.API.Models;
 using GrainInterfaces;
 using GrainInterfaces.States;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,11 @@ namespace Cart.API.Controllers
         /// Creates an User and returns its GUID
         /// </summary>
         /// <returns>GUID of the newly created User</returns>
-        [HttpPost("create")]
-        public Guid CreateUser()
+        [HttpPost("")]
+        public ActionResult CreateUser()
         {
             var grain = _client.GetGrain<IUserGrain>(Guid.NewGuid());
-            return grain.GetGrainIdentity().PrimaryKey;
+            return Ok(new MessageResult(grain.GetGrainIdentity().PrimaryKey.ToString()));
         }
         
         /// <summary>
@@ -33,11 +34,12 @@ namespace Cart.API.Controllers
         /// </summary>
         /// <param name="id">GUID of user to delete</param>
         /// <returns></returns>
-        [HttpDelete("remove/{id}")]
-        public async Task RemoveUser(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> RemoveUser(Guid id)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
             await grain.DeleteUser();
+            return Ok($"User {id} deleted");
             //TODO: How to check if this was successful?
         }
         
@@ -45,22 +47,27 @@ namespace Cart.API.Controllers
         /// Find and return details about the user
         /// </summary>
         /// <returns>GUID and balance of the user</returns>
-        [HttpGet("find/{id}")]
-        public async Task<UserState> FindUser(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> FindUser(Guid id)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            return await grain.GetState();
+            var grainState = await grain.GetState();
+            if (grainState.Id == Guid.Empty)
+            {
+                return NotFound(new MessageResult("User not found"));
+            }
+            return Ok(grainState);
         }
         
         /// <summary>
         /// Returns the credit of the specified user
         /// </summary>
         /// <returns>Decimal with user credit</returns>
-        [HttpGet("credit/{id}")]
-        public async Task<decimal> GetUserCredit(Guid id)
+        [HttpGet("{id}/credit")]
+        public async Task<ActionResult> GetUserCredit(Guid id)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            return (await grain.GetState()).Balance;
+            return Ok(new MessageResult((await grain.GetState()).Balance.ToString()));
         }
         
 
@@ -70,11 +77,15 @@ namespace Cart.API.Controllers
         /// <param name="id">GUID of the user to subtract balance from</param>
         /// <param name="amount">Positive decimal to subtract</param>
         /// <returns>Boolean indicating if action was successful</returns>
-        [HttpPost("credit/subtract/{id}/{amount}")]
-        public async Task<bool> SubtractBalance(Guid id, decimal amount)
+        [HttpPut("{id}/credit/subtract/{amount}")]
+        public async Task<ActionResult> SubtractBalance(Guid id, decimal amount)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            return await grain.ModifyCredit(-1*amount);
+            if(await grain.ModifyCredit(-1 * amount))
+            {
+                return Ok(await grain.GetState());
+            }
+            return BadRequest(new MessageResult("Insufficient credit"));
         }
         
         /// <summary>
@@ -83,11 +94,15 @@ namespace Cart.API.Controllers
         /// <param name="id">GUID of the user to ad balance to</param>
         /// <param name="amount">Positive decimal to subtract</param>
         /// <returns>Boolean indicating if action was successful</returns>
-        [HttpPost("credit/add/{id}/{amount}")]
-        public async Task<bool> AddBalance(Guid id, decimal amount)
+        [HttpPut("{id}/credit/add/{amount}")]
+        public async Task<ActionResult> AddBalance(Guid id, decimal amount)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            return await grain.ModifyCredit(amount);
+            if (await grain.ModifyCredit(amount))
+            {
+                return Ok(await grain.GetState());
+            }
+            return BadRequest(new MessageResult("Insufficient credit"));
         }
     }
 }
