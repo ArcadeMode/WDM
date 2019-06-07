@@ -11,46 +11,43 @@ namespace Grains
     [StorageProvider(ProviderName = "PaymentStorage")]
     public class PaymentGrain : Grain<PaymentState>, IPaymentGrain
     {
-
-        public async Task<int> Pay()
+        public override async Task OnActivateAsync()
         {
             await ReadStateAsync();
-
             CreatePaymentIfNeeded(State);
-            State.Value.PaymentStatus = (int)PaymentStatusEnum.Paid;
+            await base.OnActivateAsync();
+        }
 
+        public override async Task OnDeactivateAsync()
+        {
             await WriteStateAsync();
-            return State.Value.PaymentStatus;
+            await base.OnDeactivateAsync();
         }
 
-        public async Task<int> Cancel()
+        public async Task<PaymentStatus> Pay()
         {
-            await ReadStateAsync();
-
-            CreatePaymentIfNeeded(State);
-            State.Value.PaymentStatus = (int)PaymentStatusEnum.Cancelled;
-
-            await WriteStateAsync();
-            return State.Value.PaymentStatus;
+            State.Status = PaymentStatus.Paid;
+            return State.Status;
         }
 
-        public async Task<int> Status()
+        public async Task<PaymentStatus> Cancel()
         {
-            await ReadStateAsync();
-            CreatePaymentIfNeeded(State);
-            return State.Value.PaymentStatus;
+            State.Status = PaymentStatus.Cancelled;
+            return State.Status;
         }
 
-        private void CreatePaymentIfNeeded(PaymentState State)
+        public async Task<PaymentStatus> Status()
         {
-            if (State.Value == null)
+            return State.Status;
+        }
+
+        private void CreatePaymentIfNeeded(PaymentState PState)
+        {
+            State = PState ?? new PaymentState
             {
-                State.Value = new Payment
-                {
-                    PaymentID = this.GetPrimaryKey(),
-                    PaymentStatus = (int)PaymentStatusEnum.Pending
-                };
-            }
+                Id = this.GetPrimaryKey(),
+                Status = (int)PaymentStatus.Pending
+            };
         }
 
     }
