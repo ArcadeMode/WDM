@@ -19,20 +19,18 @@ namespace Silo
         private static readonly string AzureConnectionString = "DefaultEndpointsProtocol=https;AccountName=orleansstorage;AccountKey=+NuxKTXei7RwvIbwDQSba2MJYMUM2nXmEVpT6SoGuZuW1rqXhocnqKJEhQG2OmuPVaX6JaQsndEcC4vOBD7dXg==;EndpointSuffix=core.windows.net";
         private static readonly string DebugConnectionString = "UseDevelopmentStorage=true";
 
-
         static async Task Main(string[] args)
         {
             silo = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster-niek";
-                    options.ServiceId = "orleans-wdm4-service-niek";
+                    options.ClusterId = "orleans-wdm4-cluster-marc2";
+                    options.ServiceId = "orleans-wdm4-service-marc2";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("OrderStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("UserStorage", ob => ob.ConnectionString = AzureConnectionString)
-                .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("UserStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("OrderStorage", ob => ob.ConnectionString = AzureConnectionString)

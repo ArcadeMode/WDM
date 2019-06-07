@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GrainInterfaces;
+using Grains;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -50,11 +51,11 @@ namespace Cart.API
             var client = new ClientBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster";
-                    options.ServiceId = "orleans-wdm4-service";
+                    options.ClusterId = "orleans-wdm4-cluster-marc2";
+                    options.ServiceId = "orleans-wdm4-service-marc2";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IOrderGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(OrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .Build();
 
