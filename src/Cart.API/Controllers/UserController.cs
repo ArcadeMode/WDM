@@ -24,7 +24,6 @@ namespace Cart.API.Controllers
         [HttpPost("create")]
         public Guid CreateUser()
         {
-       
             var grain = _client.GetGrain<IUserGrain>(Guid.NewGuid());
             return grain.GetGrainIdentity().PrimaryKey;
         }
@@ -47,10 +46,10 @@ namespace Cart.API.Controllers
         /// </summary>
         /// <returns>GUID and balance of the user</returns>
         [HttpGet("find/{id}")]
-        public UserState FindUser(Guid id)
+        public async Task<UserState> FindUser(Guid id)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            return grain.GetState().Result;
+            return await grain.GetState();
         }
         
         /// <summary>
@@ -58,10 +57,10 @@ namespace Cart.API.Controllers
         /// </summary>
         /// <returns>Decimal with user credit</returns>
         [HttpGet("credit/{id}")]
-        public decimal GetUserCredit(Guid id)
+        public async Task<decimal> GetUserCredit(Guid id)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            return grain.GetState().Result.UserBalance;
+            return (await grain.GetState()).Balance;
         }
         
 
