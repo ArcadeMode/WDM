@@ -1,6 +1,6 @@
 ﻿namespace GrainInterfaces
 {
-    public enum PaymentStatusEnum
+    public enum PaymentStatus
     {
         Pending,
         Paid,

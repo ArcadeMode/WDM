@@ -6,17 +6,10 @@ using GrainInterfaces;
 namespace GrainInterfaces.States
 {
     [Serializable]
-    public class Payment
-    {
-        public Guid PaymentID { get; set; }
-
-        public int PaymentStatus { get; set; }
-
-    }
-
-    [Serializable]
     public class PaymentState
     {
-        public Payment Value { get; set; }
+        public Guid Id { get; set; }
+
+        public PaymentStatus Status { get; set; }
     }
 }
