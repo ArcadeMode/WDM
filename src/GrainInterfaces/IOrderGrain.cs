@@ -7,9 +7,9 @@ namespace GrainInterfaces
 {
     public interface IOrderGrain: IGrainWithGuidKey
     {
-        Task<bool> SetUser(IUserGrain userGrain);
-
         Task<Order> GetOrder();
+        
+        Task<bool> SetUser(IUserGrain userGrain);
 
         Task<bool> AddItem(Guid itemGuid);
 
@@ -17,7 +17,7 @@ namespace GrainInterfaces
 
         Task<bool> CancelOrder();
 
-        [Transaction(TransactionOption.Create)]
+        [Transaction(TransactionOption.Required)]
         Task<bool> Checkout();
     }
 }

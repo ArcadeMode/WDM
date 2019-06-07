@@ -30,15 +30,18 @@ namespace Silo
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("OrderStorage", ob => ob.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("UserStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("PaymentStorage", ob => ob.ConnectionString = AzureConnectionString)
-                //.AddAzureTableTransactionalStateStorage("TransactionStore", opt => opt.ConnectionString = AzureConnectionString)
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ItemGrain).Assembly).WithReferences())
-                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(CartGrain).Assembly).WithReferences())
+                .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(OrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .UseDashboard()
-                //.UseTransactions()
+                .UseTransactionalState()
+                .AddAzureTableGrainStorageAsDefault(options => options.ConnectionString = AzureConnectionString)
+                .UseInClusterTransactionManager()
+                .UseAzureTransactionLog(options => options.ConnectionString = AzureConnectionString) 
                 .Build();
 
             Task.Run(StartSilo);

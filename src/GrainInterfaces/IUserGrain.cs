@@ -1,19 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using GrainInterfaces.States;
 using Orleans;
 
 namespace GrainInterfaces
 {
     public interface IUserGrain: IGrainWithGuidKey
     {
-        [Transaction(TransactionOption.CreateOrJoin)]
-        Task<int> GetCredit();
+        [Transaction(TransactionOption.RequiresNew)]
+        Task<decimal> GetCredit();
 
-        [Transaction(TransactionOption.CreateOrJoin)]
-        Task<bool> ModifyCredit(decimal amount);
+        [Transaction(TransactionOption.RequiresNew)]
+        Task ModifyCredit(decimal amount);
 
         Task<Guid> AddOrder();
 
-        Task<bool> CancelActiveOrder();
+        Task<List<Guid>> GetOrders();
+
+//        Task<bool> CancelActiveOrder();
     }
 }

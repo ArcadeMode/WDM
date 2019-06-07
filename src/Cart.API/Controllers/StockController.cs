@@ -26,7 +26,7 @@ namespace Cart.API.Controllers
             return await grain.GetAvailability();
         }
 
-        [HttpGet("subtract/{id}/{amount}")]
+        [HttpPost("subtract/{id}/{amount}")]
         public async Task<int> SubtractStock(Guid id, int amount)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
@@ -34,7 +34,7 @@ namespace Cart.API.Controllers
             return await grain.ModifyStock(-1*amount);
         }
 
-        [HttpGet("add/{id}/{amount}")]
+        [HttpPost("add/{id}/{amount}")]
         public async Task<int> AddStock(Guid id, int amount)
         {
             var grain = _client.GetGrain<IItemGrain>(id);
@@ -43,10 +43,11 @@ namespace Cart.API.Controllers
         }
 
         [HttpPost("item/create")]
-        public async Task<Item> CreateItem(decimal price, int stock)
+        public async Task<Item> CreateItem()
         {
             var guid = Guid.NewGuid();
             var grain = _client.GetGrain<IItemGrain>(guid);
+            await grain.ModifyPrice(1);
             return await grain.GetItem();
         }
      

@@ -1,29 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using GrainInterfaces;
 using GrainInterfaces.States;
 using Orleans;
+using Orleans.Providers;
+using Orleans.Transactions;
+using Orleans.Transactions.Abstractions;
 
 namespace Grains
 {
+    [StorageProvider(ProviderName="UserStorage")]
     public class UserGrain: Grain<UserState>, IUserGrain
     {
 
-        public UserGrain()
+        public UserGrain([TransactionalState("balance")] ITransactionalState<Balance> balance)
         {
-            State.UserBalance = 0;
-            State.CompletedOrderGuids = new List<Guid>();
-            State.ActiveOrderGuid = AddOrder().Result;
+            State.UserBalance = balance;
+            State.OrderGuids = new List<Guid>();
         }
 
         /// <summary>
         /// Gets the current credit from the user's balance.
         /// </summary>
         /// <returns>The current user's balance</returns>
-        Task<int> IUserGrain.GetCredit()
+        Task<decimal> IUserGrain.GetCredit()
         {
-            return State.UserBalance.PerformRead(x => x.Value);
+            return Task.FromResult(State.UserBalance.State.Value);
         }
 
         /// <summary>
@@ -31,15 +35,17 @@ namespace Grains
         /// </summary>
         /// <param name="amount">Double indicating the change in balance. Positive to add, negative to subtract</param>
         /// <returns>Boolean indicating if the change in balance could be made i.e. there was enough credit.</returns>
-        public Task<bool> ModifyCredit(decimal amount)
+        public Task ModifyCredit(decimal amount)
         {
-            var balanceAfterChange = State.UserBalance + amount;
+            var balanceAfterChange = State.UserBalance.State.Value + amount;
             if (!(balanceAfterChange > 0))
             {
                 throw new Exception("Not enough credits!");
             }
             
-            return State.UserBalance.PerformUpdate(x => x.Value += amount);
+            State.UserBalance.State.Value = balanceAfterChange;
+            State.UserBalance.Save();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -49,10 +55,19 @@ namespace Grains
         public async Task<Guid> AddOrder()
         {
             var orderGuid = Guid.NewGuid();
-            GrainFactory.GetGrain<IOrderGrain>(orderGuid).SetUser(this);
-            State.ActiveOrderGuid = orderGuid;
+            var orderGrain = GrainFactory.GetGrain<IOrderGrain>(orderGuid);
+            await orderGrain.SetUser(this);
+
+            State.OrderGuids.Add(orderGuid);
             await WriteStateAsync();
+
             return orderGuid;
+        }
+
+        public async Task<List<Guid>> GetOrders()
+        {
+            await ReadStateAsync();
+            return State.OrderGuids;
         }
 
         
@@ -60,11 +75,11 @@ namespace Grains
         /// Cancels the currently active order for this user (currently just wipes the order state)
         /// </summary>
         /// <returns>True if successful, false otherwise</returns>
-        public async Task<bool> CancelActiveOrder()
-        {
-            var grain = GrainFactory.GetGrain<IOrderGrain>(State.ActiveOrderGuid);
-            await grain.CancelOrder();
-            return true;
-        }
+//        public async Task<bool> CancelActiveOrder()
+//        {
+//            var grain = GrainFactory.GetGrain<IOrderGrain>(State.ActiveOrderGuid);
+//            await grain.CancelOrder();
+//            return true;
+//        }
     }
 }

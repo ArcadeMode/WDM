@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using GrainInterfaces;
 using GrainInterfaces.States;
 using Orleans;
+using Orleans.Providers;
 
 namespace Grains
 {
+    [StorageProvider(ProviderName="OrderStorage")]
     public class OrderGrain: Grain<OrderState>, IOrderGrain
     {
         public async Task<bool> SetUser(IUserGrain userGrain) {

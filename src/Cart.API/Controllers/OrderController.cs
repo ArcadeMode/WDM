@@ -16,14 +16,23 @@ namespace Cart.API.Controllers
             _client = client;
         }
       
-        [HttpGet("create/{id}")]
-        public async Task<GrainInterfaces.States.Order> Get(Guid id)
+        [HttpPost("create/{id}")]
+        public async Task<Guid> Get(Guid userId)
         {
-            var grain = _client.GetGrain<IOrderGrain>(id);
-            return await grain.GetOrder();
+            var userGrain = _client.GetGrain<IUserGrain>(userId);
+            var newOrderGuid = await userGrain.AddOrder();
+            return newOrderGuid;
+        }
+        
+        [HttpPost("createUser")]
+        public async Task<Guid> newUser()
+        {
+            var userGuid = Guid.NewGuid();
+            _client.GetGrain<IUserGrain>(userGuid);
+            return userGuid;
         }
 
-        [HttpGet("/remove/{id}")]
+        [HttpPost("/remove/{id}")]
         public async Task CancelOrder(Guid id)
         {
             var grain = _client.GetGrain<IOrderGrain>(id);
