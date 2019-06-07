@@ -7,6 +7,8 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
     <PackageReference Include="Microsoft.Orleans.Client" Version="2.0.3" />
     <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Transactions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Orleans.Transactions.AzureStorage" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.10" />
   </ItemGroup>
   <ItemGroup>

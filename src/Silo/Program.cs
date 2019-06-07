@@ -25,10 +25,13 @@ namespace Silo
             silo = new SiloHostBuilder()
                 .Configure<ClusterOptions>(options =>
                 {
-                    options.ClusterId = "orleans-wdm4-cluster";
-                    options.ServiceId = "orleans-wdm4-service";
+                    options.ClusterId = "orleans-wdm4-cluster-niek";
+                    options.ServiceId = "orleans-wdm4-service-niek";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("OrderStorage", ob => ob.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("UserStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
                 .AddAzureTableGrainStorage("UserStorage", ob => ob.ConnectionString = AzureConnectionString)
@@ -38,6 +41,10 @@ namespace Silo
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(OrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
                 .UseDashboard()
+                .UseTransactionalState()
+                .AddAzureTableGrainStorageAsDefault(options => options.ConnectionString = AzureConnectionString)
+                .UseInClusterTransactionManager()
+                .UseAzureTransactionLog(options => options.ConnectionString = AzureConnectionString) 
                 .Build();
 
             Task.Run(StartSilo);

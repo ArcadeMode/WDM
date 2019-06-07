@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GrainInterfaces;
 using GrainInterfaces.States;
@@ -11,13 +10,22 @@ namespace Grains
     [StorageProvider(ProviderName="UserStorage")]
     public class UserGrain: Grain<UserState>, IUserGrain
     {
-        public override Task OnActivateAsync()
+        public override async Task OnActivateAsync()
         {
             if (State.Id == Guid.Empty)
             {
                 State.Id = this.GetPrimaryKey();
             }
-            return Task.CompletedTask;
+            await base.OnActivateAsync();
+        }
+
+        /// <summary>
+        /// Gets the current credit from the user's balance.
+        /// </summary>
+        /// <returns>The current user's balance</returns>
+        public async Task<decimal> GetCredit()
+        {
+            return State.Balance;
         }
 
         /// <summary>
@@ -27,12 +35,13 @@ namespace Grains
         /// <returns>Boolean indicating if the change in balance could be made i.e. there was enough credit.</returns>
         public async Task<bool> ModifyCredit(decimal amount)
         {
-            var balanceAfterChange = State.UserBalance + amount;
-            if (!(balanceAfterChange >= 0))
+            var balanceAfterChange = State.Balance + amount;
+            if (!(balanceAfterChange > 0))
             {
                 return false;
+                //throw new Exception("Not enough credits!");
             }
-            State.UserBalance += amount;
+            State.Balance += amount;
             await WriteStateAsync();
             return true;
         }
@@ -48,9 +57,9 @@ namespace Grains
             //TODO: How to check if this was successful?
         }
 
-        public Task<UserState> GetState()
+        public async Task<UserState> GetState()
         {
-            return Task.FromResult(State);
+            return State;
         }
     }
 }

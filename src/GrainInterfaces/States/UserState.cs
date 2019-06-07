@@ -6,7 +6,7 @@ namespace GrainInterfaces.States
     public class UserState
     {
         public Guid Id { get; set; }
-        public decimal UserBalance { get; set; }
        
+        public decimal Balance { get; set; }
     }
 }

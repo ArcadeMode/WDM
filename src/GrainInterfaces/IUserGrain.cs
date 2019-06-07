@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+using System;
+using System.Collections.Generic;
+>>>>>>> origin/order_branch
 using System.Threading.Tasks;
 using GrainInterfaces.States;
 using Orleans;
@@ -11,5 +16,8 @@ namespace GrainInterfaces
         Task DeleteUser();
 
         Task<UserState> GetState();
+
+        Task<decimal> GetCredit();
+
     }
 }
