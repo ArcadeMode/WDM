@@ -38,6 +38,11 @@ namespace Cart.API.Controllers
         public async Task<ActionResult> RemoveUser(Guid id)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
+            var grainState = await grain.GetState();
+            if (grainState.Id == Guid.Empty)
+            {
+                return NotFound(new MessageResult("User not found"));
+            }
             await grain.DeleteUser();
             return Ok($"User {id} deleted");
             //TODO: How to check if this was successful?
@@ -81,9 +86,14 @@ namespace Cart.API.Controllers
         public async Task<ActionResult> SubtractBalance(Guid id, decimal amount)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
-            if(await grain.ModifyCredit(-1 * amount))
+            var grainState = await grain.GetState();
+            if (grainState.Id == Guid.Empty)
             {
-                return Ok(await grain.GetState());
+                return NotFound(new MessageResult("User not found"));
+            }
+            if (await grain.ModifyCredit(-1 * amount))
+            {
+                return Ok(grainState);
             }
             return BadRequest(new MessageResult("Insufficient credit"));
         }
@@ -98,9 +108,14 @@ namespace Cart.API.Controllers
         public async Task<ActionResult> AddBalance(Guid id, decimal amount)
         {
             var grain = _client.GetGrain<IUserGrain>(id);
+            var grainState = await grain.GetState();
+            if (grainState.Id == Guid.Empty)
+            {
+                return NotFound(new MessageResult("User not found"));
+            }
             if (await grain.ModifyCredit(amount))
             {
-                return Ok(await grain.GetState());
+                return Ok(grainState);
             }
             return BadRequest(new MessageResult("Insufficient credit"));
         }

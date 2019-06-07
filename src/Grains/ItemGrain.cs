@@ -13,33 +13,40 @@ namespace Grains
     {
 
         public override async Task OnActivateAsync() {
-
+            await ReadStateAsync();
             State = State.Id != Guid.Empty ? State : new ItemState
             {
                 Id = this.GetPrimaryKey(),
-                Price = 0,
+                Price = new Random().Next(1,50),
                 Stock = 0
             };
+            await base.OnActivateAsync();
+        }
+
+        public override async Task OnDeactivateAsync()
+        {
+            await WriteStateAsync();
             await base.OnActivateAsync();
         }
    
         public async Task<ItemState> GetItem()
         {
-            await ReadStateAsync();
             return State;
         }
 
         public async Task<int> GetAvailability()
         {
-            await ReadStateAsync();
             return State.Stock;
         }
 
-        public async Task<int> ModifyStock(int amount)
+        public async Task<bool> ModifyStock(int amount)
         {
-            await ReadStateAsync();
+            if (State.Stock + amount < 0)
+            {
+                return false;
+            }
             State.Stock += amount;
-            return State.Stock;
+            return true;
         }
 
         public async Task<decimal> ModifyPrice(decimal newPrice)
@@ -47,7 +54,12 @@ namespace Grains
             State.Price = newPrice;
             return State.Price;
         }
-        
+
+        public async Task<bool> Delete()
+        {
+            await ClearStateAsync();
+            return true;
+        }
     }
 
 }

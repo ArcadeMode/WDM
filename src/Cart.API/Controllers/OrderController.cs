@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Cart.API.Models;
 using GrainInterfaces;
 using GrainInterfaces.States;
 using Microsoft.AspNetCore.Mvc;
@@ -17,21 +18,28 @@ namespace Cart.API.Controllers
             _client = client;
         }
       
-        [HttpPost("{id}")]
+        [HttpPost("{userId}")]
         public async Task<ActionResult> Create(Guid userId)
         {
             var userGrain = _client.GetGrain<IUserGrain>(userId);
             var orderGrain = _client.GetGrain<IOrderGrain>(Guid.NewGuid());
             await orderGrain.SetUser(userGrain);
-            return Ok(orderGrain.GetPrimaryKey());
+            return Ok(new MessageResult(orderGrain.GetPrimaryKey().ToString()));
         }
 
         [HttpDelete("{id}")]
-        public async Task CancelOrder(Guid id)
+        public async Task<ActionResult> DeleteOrder(Guid id)
         {
-            //TODO change to actual deletion of order? I mean, /remove/ right?
             var grain = _client.GetGrain<IOrderGrain>(id);
-            await grain.CancelOrder();
+            if ((await grain.GetOrder()).User == null)
+            {
+                return NotFound(new MessageResult("Order not found"));
+            }
+            if (await grain.DeleteOrder())
+            {
+                return Ok(new MessageResult("Order deleted"));
+            }
+            return BadRequest(new MessageResult("Order deletion failed"));
         }
         
         [HttpGet("{id}")]
@@ -40,7 +48,7 @@ namespace Cart.API.Controllers
             var orderGrain = _client.GetGrain<IOrderGrain>(id);
             if ((await orderGrain.GetOrder()).User == null)
             {
-                return NotFound("Order not found");
+                return NotFound(new MessageResult("Order not found"));
             }
 
             return Ok(await orderGrain.GetOrder());
@@ -52,7 +60,7 @@ namespace Cart.API.Controllers
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
             if((await orderGrain.GetOrder()).User == null)
             {
-                return NotFound("Order not found");
+                return NotFound(new MessageResult("Order not found"));
             }
 
             var itemGrain = _client.GetGrain<IItemGrain>(itemId);
@@ -61,7 +69,7 @@ namespace Cart.API.Controllers
                 await orderGrain.AddItem(itemGrain);
                 return Ok(orderGrain);
             }
-            return NotFound("Item not found");
+            return NotFound(new MessageResult("Item not found"));
         }
 
         [HttpPost("/{orderId}/removeItem/{itemId}")]
@@ -70,7 +78,7 @@ namespace Cart.API.Controllers
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
             if ((await orderGrain.GetOrder()).User == null)
             {
-                return NotFound("Order not found");
+                return NotFound(new MessageResult("Order not found"));
             }
 
             var itemGrain = _client.GetGrain<IItemGrain>(itemId);
@@ -78,7 +86,7 @@ namespace Cart.API.Controllers
             {
                 return Ok(orderGrain);
             }
-            return NotFound("Item not found");
+            return NotFound(new MessageResult("Item not found"));
         }
 
         [HttpPost("/checkout/{id}")]
@@ -87,7 +95,7 @@ namespace Cart.API.Controllers
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
             if ((await orderGrain.GetOrder()).User == null)
             {
-                return NotFound("Order not found");
+                return NotFound(new MessageResult("Order not found"));
             }
             return Ok(await orderGrain.Checkout());
         }

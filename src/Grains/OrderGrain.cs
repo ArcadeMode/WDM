@@ -33,7 +33,6 @@ namespace Grains
 
         public async Task<bool> SetUser(IUserGrain userGrain) {
             State.User = userGrain;
-            await WriteStateAsync();
             return true;
         }
 
@@ -46,9 +45,6 @@ namespace Grains
         {
             State.Items.TryGetValue(item, out var currentCount); 
             State.Items[item] = currentCount + 1;
-
-            await WriteStateAsync();
-
             return true;
         }
 
@@ -58,7 +54,7 @@ namespace Grains
             return true;
         }
 
-        public async Task<bool> CancelOrder()
+        public async Task<bool> DeleteOrder()
         {
             await ClearStateAsync(); 
             //TODO: dont clear, thats like destroying the order, do cancel on payment instead

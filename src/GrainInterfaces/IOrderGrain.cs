@@ -15,7 +15,7 @@ namespace GrainInterfaces
 
         Task<bool> RemoveItem(IItemGrain itemGuid);
 
-        Task<bool> CancelOrder();
+        Task<bool> DeleteOrder();
 
         Task<bool> Checkout();
     }
