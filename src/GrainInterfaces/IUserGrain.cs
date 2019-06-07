@@ -1,15 +1,15 @@
-using System;
 using System.Threading.Tasks;
+using GrainInterfaces.States;
 using Orleans;
 
 namespace GrainInterfaces
 {
     public interface IUserGrain: IGrainWithGuidKey
     {
-        Task<bool> ModifyCredit(double amount);
+        Task<bool> ModifyCredit(decimal amount);
 
-        Task<Guid> AddOrder();
+        Task DeleteUser();
 
-        Task<bool> CancelActiveOrder();
+        Task<UserState> GetState();
     }
 }
