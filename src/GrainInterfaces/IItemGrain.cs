@@ -14,5 +14,6 @@ namespace GrainInterfaces
         Task<int> ModifyStock(int amount);
 
         Task<decimal> ModifyPrice(decimal newPrice);
+
     }
 }

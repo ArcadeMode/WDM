@@ -18,7 +18,7 @@ namespace Grains
 
                 State.Value = new Item
                 {
-                    Id = Guid.NewGuid(),
+                    Id = this.GetPrimaryKey(),
                     Price = 0,
                     Stock = 0
                 };
