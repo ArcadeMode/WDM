@@ -7,7 +7,7 @@ using Orleans;
 
 namespace Cart.API.Controllers
 {
-    [Route("api/orders")]
+    [Route("api/order")]
     public class OrderController : Controller
     {
         private readonly IClusterClient _client;
@@ -18,49 +18,78 @@ namespace Cart.API.Controllers
         }
       
         [HttpPost("create/{id}")]
-        public async Task<Guid> Get(Guid userId)
+        public async Task<ActionResult> Create(Guid userId)
         {
             var userGrain = _client.GetGrain<IUserGrain>(userId);
             var orderGrain = _client.GetGrain<IOrderGrain>(Guid.NewGuid());
             await orderGrain.SetUser(userGrain);
-            return orderGrain.GetPrimaryKey();
+            return Ok(orderGrain.GetPrimaryKey());
         }
 
-        [HttpPost("/remove/{id}")]
+        [HttpPost("remove/{id}")]
         public async Task CancelOrder(Guid id)
         {
+            //TODO change to actual deletion of order? I mean, /remove/ right?
             var grain = _client.GetGrain<IOrderGrain>(id);
             await grain.CancelOrder();
         }
         
-        [HttpGet("/find/{id}")]
-        public async Task<OrderState> GetOrder(Guid id)
+        [HttpGet("find/{id}")]
+        public async Task<ActionResult> GetOrder(Guid id)
         {
-            var grain = _client.GetGrain<IOrderGrain>(id);
-            return await grain.GetOrder();
+            var orderGrain = _client.GetGrain<IOrderGrain>(id);
+            if ((await orderGrain.GetOrder()).User == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            return Ok(await orderGrain.GetOrder());
         }
 
         [HttpPost("/addItem/{orderId}/{itemId}")]
-        public async Task AddItem(Guid orderId, Guid itemId)
+        public async Task<ActionResult> AddItem(Guid orderId, Guid itemId)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
-            //TODO: Check if item exists?
-            await orderGrain.AddItem(itemId);
+            if((await orderGrain.GetOrder()).User == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            var itemGrain = _client.GetGrain<IItemGrain>(itemId);
+            if((await itemGrain.GetItem()).Price > 0)
+            {
+                await orderGrain.AddItem(itemGrain);
+                return Ok(orderGrain);
+            }
+            return NotFound("Item was not found");
         }
 
         [HttpPost("/removeItem/{orderId}/{itemId}")]
-        public async Task RemoveItem(Guid orderId, Guid itemId)
+        public async Task<ActionResult> RemoveItem(Guid orderId, Guid itemId)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
-            //TODO: Check if item exists?
-            await orderGrain.RemoveItem(itemId);
+            if ((await orderGrain.GetOrder()).User == null)
+            {
+                return NotFound("Order not found");
+            }
+
+            var itemGrain = _client.GetGrain<IItemGrain>(itemId);
+            if ((await itemGrain.GetItem()).Price > 0 && await orderGrain.RemoveItem(itemGrain))
+            {
+                return Ok(orderGrain);
+            }
+            return NotFound("Item not found");
         }
 
         [HttpPost("/checkout/{id}")]
-        public async Task<bool> CheckoutOrder(Guid orderId)
+        public async Task<ActionResult> CheckoutOrder(Guid orderId)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
-            return await orderGrain.Checkout();
+            if ((await orderGrain.GetOrder()).User == null)
+            {
+                return NotFound("Order not found");
+            }
+            return Ok(await orderGrain.Checkout());
         }
     }
 }

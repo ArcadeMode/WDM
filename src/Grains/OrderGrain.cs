@@ -14,7 +14,21 @@ namespace Grains
 
         public override async Task OnActivateAsync()
         {
+            await ReadStateAsync();
 
+            State = State.Id != Guid.Empty ? State : new OrderState
+            {
+                Id = this.GetPrimaryKey(),
+                User = null,
+                Items = new Dictionary<IItemGrain, int>(new ItemEqualityComparer())
+            };
+            await base.OnActivateAsync();
+        }
+
+        public override async Task OnDeactivateAsync()
+        {
+            await WriteStateAsync();
+            await base.OnDeactivateAsync();
         }
 
         public async Task<bool> SetUser(IUserGrain userGrain) {
@@ -24,32 +38,23 @@ namespace Grains
         }
 
         public async Task<OrderState> GetOrder()
-        {
-            await ReadStateAsync();
-            
+        {            
             return State;
         }
 
-        public async Task<bool> AddItem(Guid itemGuid)
+        public async Task<bool> AddItem(IItemGrain item)
         {
-            await ReadStateAsync();
-
-            State.Items.TryGetValue(itemGuid, out var currentCount); 
-            State.Items[itemGuid] = currentCount + 1;
+            State.Items.TryGetValue(item, out var currentCount); 
+            State.Items[item] = currentCount + 1;
 
             await WriteStateAsync();
 
             return true;
         }
 
-        public async Task<bool> RemoveItem(Guid itemGuid)
+        public async Task<bool> RemoveItem(IItemGrain item)
         {
-            await ReadStateAsync();
-
-            State.Items.Remove(itemGuid);
-
-            await WriteStateAsync();
-
+            State.Items.Remove(item);
             return true;
         }
 
@@ -64,16 +69,15 @@ namespace Grains
         {
             //List of all items in the order
             var orderItems = State.Items;
-            
             //Tasks to do after checks
             List<Task> tasks = new List<Task>();
             
             decimal totalSum = 0;
 
             //For each item in order
-            foreach(KeyValuePair<Guid, int> kvp in orderItems )
+            foreach(KeyValuePair<IItemGrain, int> kvp in orderItems )
             {
-                var itemGrain = GrainFactory.GetGrain<IItemGrain>(kvp.Key);
+                var itemGrain = kvp.Key;
                 var item = await itemGrain.GetItem();
                 
                 //Check if stock of item is at least as much as the ordered amount
@@ -112,4 +116,10 @@ namespace Grains
             return true;
         }
     }
+}
+
+public class ItemEqualityComparer : IEqualityComparer<IItemGrain>
+{
+    public int GetHashCode(IItemGrain item) { return item.GetPrimaryKey().GetHashCode(); }
+    public bool Equals(IItemGrain item1, IItemGrain item2) { return item1.GetPrimaryKey() == item2.GetPrimaryKey(); }
 }

@@ -15,7 +15,11 @@ namespace Grains
         public override async Task OnActivateAsync()
         {
             await ReadStateAsync();
-            CreatePaymentIfNeeded(State);
+            State = State.Id != Guid.Empty ? State : new PaymentState
+            {
+                Id = this.GetPrimaryKey(),
+                Status = (int)PaymentStatus.Pending
+            };
             await base.OnActivateAsync();
         }
 
@@ -40,15 +44,6 @@ namespace Grains
         public async Task<PaymentStatus> Status()
         {
             return State.Status;
-        }
-
-        private void CreatePaymentIfNeeded(PaymentState PState)
-        {
-            State = PState ?? new PaymentState
-            {
-                Id = this.GetPrimaryKey(),
-                Status = (int)PaymentStatus.Pending
-            };
         }
 
     }

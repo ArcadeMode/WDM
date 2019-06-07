@@ -43,8 +43,8 @@ namespace Silo
                 .UseDashboard()
                 .UseTransactionalState()
                 .AddAzureTableGrainStorageAsDefault(options => options.ConnectionString = AzureConnectionString)
-                .UseInClusterTransactionManager()
-                .UseAzureTransactionLog(options => options.ConnectionString = AzureConnectionString) 
+                //.UseInClusterTransactionManager()
+                //.UseAzureTransactionLog(options => options.ConnectionString = AzureConnectionString) 
                 .Build();
 
             Task.Run(StartSilo);

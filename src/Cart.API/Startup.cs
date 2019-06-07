@@ -64,7 +64,7 @@ namespace Cart.API
             //https://github.com/dotnet/orleans/issues/5158
             async Task<bool> RetryFilter(Exception exception)
             {
-                Console.WriteLine("Exception while attempting to connect to Orleans cluster: {Exception}", exception);
+                Console.WriteLine("Exception while attempting to connect to Orleans cluster: {0}", exception);
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 return true;
             }

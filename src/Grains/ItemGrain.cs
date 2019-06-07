@@ -14,7 +14,7 @@ namespace Grains
 
         public override async Task OnActivateAsync() {
 
-            State = State ?? new ItemState
+            State = State.Id != Guid.Empty ? State : new ItemState
             {
                 Id = this.GetPrimaryKey(),
                 Price = 0,

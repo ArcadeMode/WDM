@@ -15,6 +15,7 @@ namespace Grains
             if (State.Id == Guid.Empty)
             {
                 State.Id = this.GetPrimaryKey();
+                State.Balance = 0;
             }
             await base.OnActivateAsync();
         }

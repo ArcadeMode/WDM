@@ -11,9 +11,9 @@ namespace GrainInterfaces
         
         Task<bool> SetUser(IUserGrain userGrain);
 
-        Task<bool> AddItem(Guid itemGuid);
+        Task<bool> AddItem(IItemGrain item);
 
-        Task<bool> RemoveItem(Guid itemGuid);
+        Task<bool> RemoveItem(IItemGrain itemGuid);
 
         Task<bool> CancelOrder();
 

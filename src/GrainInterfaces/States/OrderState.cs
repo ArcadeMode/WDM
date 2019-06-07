@@ -10,7 +10,7 @@ namespace GrainInterfaces.States
     {
         public Guid Id { get; set; }
 
-        public Dictionary<Guid, int> Items { get; set; }
+        public Dictionary<IItemGrain, int> Items { get; set; }
 
         public IUserGrain User { get; set; }
 
@@ -18,8 +18,8 @@ namespace GrainInterfaces.States
         {
             get
             {
-                throw new NotImplementedException("TODO: should be changed to get all items from the list of Ids, and then sum the price.");
-                //return Items?.Sum(_ => _.Price) ?? 0;
+                //TODO: should be changed to get all items from the list of Ids, and then sum the price.
+                return -1m;
             }
         }
     }
