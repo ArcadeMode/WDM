@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GrainInterfaces;
+using GrainInterfaces.States;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 
@@ -20,12 +21,9 @@ namespace Cart.API.Controllers
         public async Task<Guid> Get(Guid userId)
         {
             var userGrain = _client.GetGrain<IUserGrain>(userId);
-            var newOrderGuid = Guid.NewGuid();
-            var orderGrain = _client.GetGrain<IOrderGrain>(newOrderGuid);
-            
+            var orderGrain = _client.GetGrain<IOrderGrain>(Guid.NewGuid());
             await orderGrain.SetUser(userGrain);
-            
-            return newOrderGuid;
+            return orderGrain.GetPrimaryKey();
         }
 
         [HttpPost("/remove/{id}")]
@@ -36,7 +34,7 @@ namespace Cart.API.Controllers
         }
         
         [HttpGet("/find/{id}")]
-        public async Task<GrainInterfaces.States.Order> GetOrder(Guid id)
+        public async Task<OrderState> GetOrder(Guid id)
         {
             var grain = _client.GetGrain<IOrderGrain>(id);
             return await grain.GetOrder();

@@ -12,44 +12,40 @@ namespace Grains
     public class ItemGrain : Grain<ItemState>, IItemGrain
     {
 
-        public override Task OnActivateAsync() {
+        public override async Task OnActivateAsync() {
 
-            if (State.Value == null) {
-
-                State.Value = new Item
-                {
-                    Id = this.GetPrimaryKey(),
-                    Price = 0,
-                    Stock = 0
-                };
-            }
-
-            return Task.CompletedTask;
+            State = State ?? new ItemState
+            {
+                Id = this.GetPrimaryKey(),
+                Price = 0,
+                Stock = 0
+            };
+            await base.OnActivateAsync();
         }
    
-        public async Task<Item> GetItem()
+        public async Task<ItemState> GetItem()
         {
             await ReadStateAsync();
-            return State.Value;
+            return State;
         }
 
         public async Task<int> GetAvailability()
         {
             await ReadStateAsync();
-            return State.Value.Stock;
+            return State.Stock;
         }
 
         public async Task<int> ModifyStock(int amount)
         {
             await ReadStateAsync();
-            State.Value.Stock += amount;
-            return State.Value.Stock;
+            State.Stock += amount;
+            return State.Stock;
         }
 
         public async Task<decimal> ModifyPrice(decimal newPrice)
         {
-            State.Value.Price = newPrice;
-            return State.Value.Price;
+            State.Price = newPrice;
+            return State.Price;
         }
         
     }

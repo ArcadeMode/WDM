@@ -7,7 +7,7 @@ namespace GrainInterfaces
 {
     public interface IItemGrain : IGrainWithGuidKey
     {
-        Task<Item> GetItem();
+        Task<ItemState> GetItem();
         
         Task<int> GetAvailability();
         

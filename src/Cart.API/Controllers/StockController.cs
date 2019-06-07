@@ -42,7 +42,7 @@ namespace Cart.API.Controllers
         }
 
         [HttpPost("item/create")]
-        public async Task<Item> CreateItem()
+        public async Task<ItemState> CreateItem()
         {
             var guid = Guid.NewGuid();
             var grain = _client.GetGrain<IItemGrain>(guid);

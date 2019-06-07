@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Orleans;
+﻿using Orleans;
 using System.Threading.Tasks;
-using GrainInterfaces.States;
+using GrainInterfaces.Enums;
 
 namespace GrainInterfaces
 {

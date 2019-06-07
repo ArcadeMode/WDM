@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GrainInterfaces;
+using GrainInterfaces.Enums;
 using Orleans;
 using System.Threading.Tasks;
 using GrainInterfaces.States;

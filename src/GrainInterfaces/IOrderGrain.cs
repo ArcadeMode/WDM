@@ -7,7 +7,7 @@ namespace GrainInterfaces
 {
     public interface IOrderGrain: IGrainWithGuidKey
     {
-        Task<Order> GetOrder();
+        Task<OrderState> GetOrder();
         
         Task<bool> SetUser(IUserGrain userGrain);
 

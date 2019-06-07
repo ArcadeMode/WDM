@@ -1,4 +1,4 @@
-﻿namespace GrainInterfaces
+﻿namespace GrainInterfaces.Enums
 {
     public enum PaymentStatus
     {

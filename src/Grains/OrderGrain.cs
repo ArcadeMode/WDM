@@ -11,42 +11,31 @@ namespace Grains
     [StorageProvider(ProviderName="OrderStorage")]
     public class OrderGrain: Grain<OrderState>, IOrderGrain
     {
+
+        public override async Task OnActivateAsync()
+        {
+
+        }
+
         public async Task<bool> SetUser(IUserGrain userGrain) {
-            State.Value.User = userGrain;
-
+            State.User = userGrain;
             await WriteStateAsync();
-
             return true;
         }
 
-        public async Task<Order> GetOrder()
+        public async Task<OrderState> GetOrder()
         {
             await ReadStateAsync();
             
-            if (State.Value != null) return State.Value;
-
-            State.Value = new Order
-            {
-                Id =  Guid.NewGuid(),
-                Items = new Dictionary<Guid, int>()
-            };
-
-            await WriteStateAsync();
-            
-            return State.Value;
+            return State;
         }
 
         public async Task<bool> AddItem(Guid itemGuid)
         {
             await ReadStateAsync();
 
-            if (State.Value == null)
-            {
-                State = new OrderState();
-            }
-
-            State.Value.Items.TryGetValue(itemGuid, out var currentCount); 
-            State.Value.Items[itemGuid] = currentCount + 1;
+            State.Items.TryGetValue(itemGuid, out var currentCount); 
+            State.Items[itemGuid] = currentCount + 1;
 
             await WriteStateAsync();
 
@@ -57,12 +46,7 @@ namespace Grains
         {
             await ReadStateAsync();
 
-            if (State.Value == null)
-            {
-                State = new OrderState();
-            }
-
-            State.Value.Items.Remove(itemGuid);
+            State.Items.Remove(itemGuid);
 
             await WriteStateAsync();
 
@@ -71,14 +55,15 @@ namespace Grains
 
         public async Task<bool> CancelOrder()
         {
-            await ClearStateAsync();
+            await ClearStateAsync(); 
+            //TODO: dont clear, thats like destroying the order, do cancel on payment instead
             return true;
         }
 
         public async Task<bool> Checkout()
         {
             //List of all items in the order
-            var orderItems = State.Value.Items;
+            var orderItems = State.Items;
             
             //Tasks to do after checks
             List<Task> tasks = new List<Task>();
@@ -105,16 +90,16 @@ namespace Grains
              }
             
             //Get the current credit of the user
-            var credit = await State.Value.User.GetCredit();
+            var credit = await State.User.GetCredit();
             
             //Check if user's credit is enough to pay for all ordered products
             if(credit >= totalSum)
             {
                 //Add subtracting the credit of the user to list of tasks to perform
-                tasks.Add(State.Value.User.ModifyCredit(-1 * totalSum));
+                tasks.Add(State.User.ModifyCredit(-1 * totalSum));
             } else
             {
-                throw new Exception($"Balance of user {State.Value.User.GetPrimaryKey()} is lower than {totalSum}.");
+                throw new Exception($"Balance of user {State.User.GetPrimaryKey()} is lower than {totalSum}.");
             }
             
             //Create a new payment grain and set it to "paid"

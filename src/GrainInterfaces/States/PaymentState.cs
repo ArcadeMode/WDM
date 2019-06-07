@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GrainInterfaces;
+using GrainInterfaces.Enums;
 
 namespace GrainInterfaces.States
 {
