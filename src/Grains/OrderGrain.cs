@@ -19,8 +19,8 @@ namespace Grains
             State = State.Id != Guid.Empty ? State : new OrderState
             {
                 Id = this.GetPrimaryKey(),
-                User = null,
-                Items = new Dictionary<IItemGrain, int>(new ItemEqualityComparer())
+                UserId = Guid.Empty,
+                Items = new Dictionary<Guid, int>()
             };
             await base.OnActivateAsync();
         }
@@ -32,7 +32,7 @@ namespace Grains
         }
 
         public async Task<bool> SetUser(IUserGrain userGrain) {
-            State.User = userGrain;
+            State.UserId = userGrain.GetPrimaryKey();
             return true;
         }
 
@@ -43,15 +43,20 @@ namespace Grains
 
         public async Task<bool> AddItem(IItemGrain item)
         {
-            State.Items.TryGetValue(item, out var currentCount); 
-            State.Items[item] = currentCount + 1;
+            var itemKey = item.GetPrimaryKey();
+            if(State.Items.TryGetValue(itemKey, out var currentCount))
+            {
+                State.Items[itemKey] = currentCount + 1;
+            } else
+            {
+                State.Items.Add(itemKey, 1);
+            }
             return true;
         }
 
         public async Task<bool> RemoveItem(IItemGrain item)
         {
-            State.Items.Remove(item);
-            return true;
+            return State.Items.Remove(item.GetPrimaryKey());
         }
 
         public async Task<bool> DeleteOrder()
@@ -71,9 +76,10 @@ namespace Grains
             decimal totalSum = 0;
 
             //For each item in order
-            foreach(KeyValuePair<IItemGrain, int> kvp in orderItems )
+            foreach(KeyValuePair<Guid, int> kvp in orderItems )
             {
-                var itemGrain = kvp.Key;
+                var itemKey = kvp.Key;
+                var itemGrain = GrainFactory.GetGrain<IItemGrain>(itemKey);
                 var item = await itemGrain.GetItem();
                 
                 //Check if stock of item is at least as much as the ordered amount
@@ -88,18 +94,20 @@ namespace Grains
                     throw new Exception($"Stock of item {kvp.Key} is lower than {kvp.Value}.");
                 }
              }
-            
+
+            var userGrain = GrainFactory.GetGrain<IUserGrain>(State.UserId);
+
             //Get the current credit of the user
-            var credit = await State.User.GetCredit();
+            var credit = await userGrain.GetCredit();
             
             //Check if user's credit is enough to pay for all ordered products
             if(credit >= totalSum)
             {
                 //Add subtracting the credit of the user to list of tasks to perform
-                tasks.Add(State.User.ModifyCredit(-1 * totalSum));
+                tasks.Add(userGrain.ModifyCredit(-1 * totalSum));
             } else
             {
-                throw new Exception($"Balance of user {State.User.GetPrimaryKey()} is lower than {totalSum}.");
+                throw new Exception($"Balance of user {userGrain.GetPrimaryKey()} is lower than {totalSum}.");
             }
             
             //Create a new payment grain and set it to "paid"
@@ -112,10 +120,4 @@ namespace Grains
             return true;
         }
     }
-}
-
-public class ItemEqualityComparer : IEqualityComparer<IItemGrain>
-{
-    public int GetHashCode(IItemGrain item) { return item.GetPrimaryKey().GetHashCode(); }
-    public bool Equals(IItemGrain item1, IItemGrain item2) { return item1.GetPrimaryKey() == item2.GetPrimaryKey(); }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using GrainInterfaces;
 using Orleans;
 using System.Threading.Tasks;
-using GrainInterfaces.States;
 using Orleans.Providers;
+using GrainInterfaces.States;
 
 namespace Grains
 {
@@ -60,6 +60,7 @@ namespace Grains
             await ClearStateAsync();
             return true;
         }
+
     }
 
 }

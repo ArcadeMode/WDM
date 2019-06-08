@@ -29,11 +29,10 @@ namespace Silo
                     options.ServiceId = "orleans-wdm4-service-aks";
                 })
                 .UseAzureStorageClustering(opt => opt.ConnectionString = AzureConnectionString)
-                .AddAzureTableGrainStorage("CartStorage", ob => ob.ConnectionString = AzureConnectionString)
-                .AddAzureTableGrainStorage("ItemStorage", ob => ob.ConnectionString = AzureConnectionString)
-                .AddAzureTableGrainStorage("UserStorage", ob => ob.ConnectionString = AzureConnectionString)
-                .AddAzureTableGrainStorage("OrderStorage", ob => ob.ConnectionString = AzureConnectionString)
-                .AddAzureTableGrainStorage("PaymentStorage", ob => ob.ConnectionString = AzureConnectionString)
+                .AddAzureTableGrainStorage("ItemStorage", ConfigureAzureTableStorage)
+                .AddAzureTableGrainStorage("UserStorage", ConfigureAzureTableStorage)
+                .AddAzureTableGrainStorage("OrderStorage", ConfigureAzureTableStorage)
+                .AddAzureTableGrainStorage("PaymentStorage", ConfigureAzureTableStorage)
                 .ConfigureEndpoints(siloPort: 11111, gatewayPort: 30000)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(OrderGrain).Assembly).WithReferences())
                 .ConfigureLogging(logging => logging.AddConsole())
@@ -50,6 +49,12 @@ namespace Silo
             };
 
             siloStopped.WaitOne();
+        }
+
+        private static void ConfigureAzureTableStorage(AzureTableStorageOptions ob)
+        {
+            ob.ConnectionString = AzureConnectionString;
+            ob.DeleteStateOnClear = true;
         }
 
         private static async Task StartSilo()

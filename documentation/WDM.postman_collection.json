@@ -1,0 +1,396 @@
+{
+	"info": {
+		"_postman_id": "48784bbe-27af-40f6-aa92-103740b1fe61",
+		"name": "WDM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"description": "",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/user/575f025a-9c4b-40f5-bcab-6722405a28d6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"user",
+								"575f025a-9c4b-40f5-bcab-6722405a28d6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user add credit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/user/575f025a-9c4b-40f5-bcab-6722405a28d6/credit/add/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"user",
+								"575f025a-9c4b-40f5-bcab-6722405a28d6",
+								"credit",
+								"add",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user subtract credit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/user/575f025a-9c4b-40f5-bcab-6722405a28d6/credit/subtract/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"user",
+								"575f025a-9c4b-40f5-bcab-6722405a28d6",
+								"credit",
+								"subtract",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user credit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/user/575f025a-9c4b-40f5-bcab-6722405a28d6/credit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"user",
+								"575f025a-9c4b-40f5-bcab-6722405a28d6",
+								"credit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"description": "",
+			"item": [
+				{
+					"name": "order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/order/4e5768a7-3cd7-4582-a6b5-ab58500f5081",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"order",
+								"4e5768a7-3cd7-4582-a6b5-ab58500f5081"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/order/cb06ac22-5748-4756-8f2c-81cf1f633378",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"order",
+								"cb06ac22-5748-4756-8f2c-81cf1f633378"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/order/cb06ac22-5748-4756-8f2c-81cf1f633378",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"order",
+								"cb06ac22-5748-4756-8f2c-81cf1f633378"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order add item",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/order/42ca51e7-e31a-4d2d-b498-7680d330ffdc/addItem/86f73bd9-54c1-4898-bd1d-554bfd862307",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"order",
+								"42ca51e7-e31a-4d2d-b498-7680d330ffdc",
+								"addItem",
+								"86f73bd9-54c1-4898-bd1d-554bfd862307"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order remove item",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/order/42ca51e7-e31a-4d2d-b498-7680d330ffdc/removeItem/86f73bd9-54c1-4898-bd1d-554bfd862307",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"order",
+								"42ca51e7-e31a-4d2d-b498-7680d330ffdc",
+								"removeItem",
+								"86f73bd9-54c1-4898-bd1d-554bfd862307"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "stock",
+			"description": "",
+			"item": [
+				{
+					"name": "item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/stock/item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"stock",
+								"item"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/stock/item/8560f525-76e8-4e81-8dc9-d0265ff5ecb6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"stock",
+								"item",
+								"8560f525-76e8-4e81-8dc9-d0265ff5ecb6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "item",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/stock/item/71a077b3-9d5c-4f94-9223-a9d6351bea8d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"stock",
+								"item",
+								"71a077b3-9d5c-4f94-9223-a9d6351bea8d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "item add stock",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/stock/item/71a077b3-9d5c-4f94-9223-a9d6351bea8d/add/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"stock",
+								"item",
+								"71a077b3-9d5c-4f94-9223-a9d6351bea8d",
+								"add",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "item subtract stock",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/stock/item/71a077b3-9d5c-4f94-9223-a9d6351bea8d/subtract/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"stock",
+								"item",
+								"71a077b3-9d5c-4f94-9223-a9d6351bea8d",
+								"subtract",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

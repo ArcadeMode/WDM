@@ -10,9 +10,9 @@ namespace GrainInterfaces.States
     {
         public Guid Id { get; set; }
 
-        public Dictionary<IItemGrain, int> Items { get; set; }
+        public Dictionary<Guid, int> Items { get; set; }
 
-        public IUserGrain User { get; set; }
+        public Guid UserId { get; set; }
 
         public decimal Total
         {
