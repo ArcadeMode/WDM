@@ -37,7 +37,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8181/api/user",
+							"raw": "http://localhost:8181/api/user/8b8f5ce2-6b52-416f-bdb2-7d6667549deb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -45,7 +45,8 @@
 							"port": "8181",
 							"path": [
 								"api",
-								"user"
+								"user",
+								"8b8f5ce2-6b52-416f-bdb2-7d6667549deb"
 							]
 						}
 					},
@@ -80,7 +81,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8181/api/user/575f025a-9c4b-40f5-bcab-6722405a28d6/credit/add/5",
+							"raw": "http://localhost:8181/api/user/8b8f5ce2-6b52-416f-bdb2-7d6667549deb/credit/add/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -89,7 +90,7 @@
 							"path": [
 								"api",
 								"user",
-								"575f025a-9c4b-40f5-bcab-6722405a28d6",
+								"8b8f5ce2-6b52-416f-bdb2-7d6667549deb",
 								"credit",
 								"add",
 								"5"
@@ -159,7 +160,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8181/api/order/4e5768a7-3cd7-4582-a6b5-ab58500f5081",
+							"raw": "http://localhost:8181/api/order/8b8f5ce2-6b52-416f-bdb2-7d6667549deb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -168,7 +169,7 @@
 							"path": [
 								"api",
 								"order",
-								"4e5768a7-3cd7-4582-a6b5-ab58500f5081"
+								"8b8f5ce2-6b52-416f-bdb2-7d6667549deb"
 							]
 						}
 					},
@@ -181,7 +182,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8181/api/order/cb06ac22-5748-4756-8f2c-81cf1f633378",
+							"raw": "http://localhost:8181/api/order/1fe65f9f-a8bf-4851-af9a-46236372320e",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -190,7 +191,7 @@
 							"path": [
 								"api",
 								"order",
-								"cb06ac22-5748-4756-8f2c-81cf1f633378"
+								"1fe65f9f-a8bf-4851-af9a-46236372320e"
 							]
 						}
 					},
@@ -225,7 +226,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8181/api/order/42ca51e7-e31a-4d2d-b498-7680d330ffdc/addItem/86f73bd9-54c1-4898-bd1d-554bfd862307",
+							"raw": "http://localhost:8181/api/order/1fe65f9f-a8bf-4851-af9a-46236372320e/addItem/036b48c3-0ee2-40de-a99a-5f2f59dd538d",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -234,9 +235,9 @@
 							"path": [
 								"api",
 								"order",
-								"42ca51e7-e31a-4d2d-b498-7680d330ffdc",
+								"1fe65f9f-a8bf-4851-af9a-46236372320e",
 								"addItem",
-								"86f73bd9-54c1-4898-bd1d-554bfd862307"
+								"036b48c3-0ee2-40de-a99a-5f2f59dd538d"
 							]
 						}
 					},
@@ -261,6 +262,29 @@
 								"42ca51e7-e31a-4d2d-b498-7680d330ffdc",
 								"removeItem",
 								"86f73bd9-54c1-4898-bd1d-554bfd862307"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8181/api/order/1fe65f9f-a8bf-4851-af9a-46236372320e/checkout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"api",
+								"order",
+								"1fe65f9f-a8bf-4851-af9a-46236372320e",
+								"checkout"
 							]
 						}
 					},
@@ -347,7 +371,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8181/api/stock/item/71a077b3-9d5c-4f94-9223-a9d6351bea8d/add/10",
+							"raw": "http://localhost:8181/api/stock/item/036b48c3-0ee2-40de-a99a-5f2f59dd538d/add/10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -357,7 +381,7 @@
 								"api",
 								"stock",
 								"item",
-								"71a077b3-9d5c-4f94-9223-a9d6351bea8d",
+								"036b48c3-0ee2-40de-a99a-5f2f59dd538d",
 								"add",
 								"10"
 							]

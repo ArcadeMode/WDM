@@ -27,10 +27,10 @@ namespace Cart.API.Controllers
             return Ok(new MessageResult(orderGrain.GetPrimaryKey().ToString()));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteOrder(Guid id)
+        [HttpDelete("{orderId}")]
+        public async Task<ActionResult> DeleteOrder(Guid orderId)
         {
-            var grain = _client.GetGrain<IOrderGrain>(id);
+            var grain = _client.GetGrain<IOrderGrain>(orderId);
             if ((await grain.GetOrder()).UserId == Guid.Empty)
             {
                 return NotFound(new MessageResult("Order not found"));
@@ -42,10 +42,10 @@ namespace Cart.API.Controllers
             return BadRequest(new MessageResult("Order deletion failed"));
         }
         
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetOrder(Guid id)
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult> GetOrder(Guid orderId)
         {
-            var orderGrain = _client.GetGrain<IOrderGrain>(id);
+            var orderGrain = _client.GetGrain<IOrderGrain>(orderId);
             if ((await orderGrain.GetOrder()).UserId == Guid.Empty)
             {
                 return NotFound(new MessageResult("Order not found"));
@@ -91,7 +91,7 @@ namespace Cart.API.Controllers
             return BadRequest(new MessageResult("Item not present in order"));
         }
 
-        [HttpPost("/checkout/{id}")]
+        [HttpPost("{orderId}/checkout")]
         public async Task<ActionResult> CheckoutOrder(Guid orderId)
         {
             var orderGrain = _client.GetGrain<IOrderGrain>(orderId);

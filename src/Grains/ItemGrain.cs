@@ -17,7 +17,7 @@ namespace Grains
             State = State.Id != Guid.Empty ? State : new ItemState
             {
                 Id = this.GetPrimaryKey(),
-                Price = new Random().Next(1,50),
+                Price = 0,
                 Stock = 0
             };
             await base.OnActivateAsync();

@@ -29,16 +29,14 @@ namespace Grains
             await base.OnDeactivateAsync();
         }
 
-        public async Task<PaymentStatus> Pay()
+        public async Task<PaymentStatus> Pay(IUserGrain user, decimal amount)
         {
-            State.Status = PaymentStatus.Paid;
-            return State.Status;
+            return State.Status = await user.ModifyCredit(-1*amount) ? PaymentStatus.Paid : PaymentStatus.Pending;
         }
 
         public async Task<PaymentStatus> Cancel()
         {
-            State.Status = PaymentStatus.Cancelled;
-            return State.Status;
+            return State.Status = PaymentStatus.Cancelled;
         }
 
         public async Task<PaymentStatus> Status()

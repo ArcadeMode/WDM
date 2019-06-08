@@ -5,6 +5,7 @@ using GrainInterfaces;
 using GrainInterfaces.States;
 using Orleans;
 using Orleans.Providers;
+using GrainInterfaces.Enums;
 
 namespace Grains
 {
@@ -20,6 +21,7 @@ namespace Grains
             {
                 Id = this.GetPrimaryKey(),
                 UserId = Guid.Empty,
+                PaymentId = Guid.Empty,
                 Items = new Dictionary<Guid, int>()
             };
             await base.OnActivateAsync();
@@ -68,56 +70,57 @@ namespace Grains
 
         public async Task<bool> Checkout()
         {
-            //List of all items in the order
-            var orderItems = State.Items;
-            //Tasks to do after checks
-            List<Task> tasks = new List<Task>();
-            
-            decimal totalSum = 0;
+            var paymentGrain = GrainFactory.GetGrain<IPaymentGrain>(State.PaymentId);
+            if(await paymentGrain.Status() != PaymentStatus.Pending)
+            {
+                return false; //order already processed
+            }
 
-            //For each item in order
-            foreach(KeyValuePair<Guid, int> kvp in orderItems )
+            decimal totalSum = 0;
+            var orderItems = State.Items;
+            var processedItems = new List<KeyValuePair<Guid, int>>();
+            foreach (KeyValuePair<Guid, int> kvp in orderItems )
             {
                 var itemKey = kvp.Key;
+                var itemCount = kvp.Value;
                 var itemGrain = GrainFactory.GetGrain<IItemGrain>(itemKey);
-                var item = await itemGrain.GetItem();
-                
-                //Check if stock of item is at least as much as the ordered amount
-                if(item.Stock >= kvp.Value) {
-                    //add its price times the amount to the total sum of the order
-                   totalSum += item.Price*kvp.Value;
-                   
-                   //Add subtracting the stock of current item to list of tasks to perform
-                   tasks.Add(itemGrain.ModifyStock(-1*kvp.Value));
-                } else
+                var itemState = await itemGrain.GetItem();
+                if(itemState.Price == 0)
                 {
-                    throw new Exception($"Stock of item {kvp.Key} is lower than {kvp.Value}.");
+                    await RemoveItem(itemGrain);
+                    continue; //skip item if its considered deleted and remove it from the order
                 }
-             }
-
-            var userGrain = GrainFactory.GetGrain<IUserGrain>(State.UserId);
-
-            //Get the current credit of the user
-            var credit = await userGrain.GetCredit();
-            
-            //Check if user's credit is enough to pay for all ordered products
-            if(credit >= totalSum)
-            {
-                //Add subtracting the credit of the user to list of tasks to perform
-                tasks.Add(userGrain.ModifyCredit(-1 * totalSum));
-            } else
-            {
-                throw new Exception($"Balance of user {userGrain.GetPrimaryKey()} is lower than {totalSum}.");
+                if(await itemGrain.ModifyStock(-1 * itemCount)) { //0 price indicates deleted item
+                    totalSum += itemState.Price * itemCount;
+                    processedItems.Add(kvp);
+                } else
+                {   //insufficient stock
+                    await RollBackStockChanges(processedItems);
+                    break;
+                }
             }
-            
-            //Create a new payment grain and set it to "paid"
-            var paymentGrain = GrainFactory.GetGrain<IPaymentGrain>(Guid.NewGuid());
-            tasks.Add(paymentGrain.Pay());
+            var userGrain = GrainFactory.GetGrain<IUserGrain>(State.UserId);
+            if(await paymentGrain.Pay(userGrain, totalSum) == PaymentStatus.Paid)
+            {
+                //payment succesfull & stock subtracted succesfull
+                return true;
+            } 
+            //insufficient credits
+            await RollBackStockChanges(processedItems);
+            return false;
+        }
 
-            //Complete all tasks
-            await Task.WhenAll(tasks);
-
-            return true;
+        private async Task<bool> RollBackStockChanges(List<KeyValuePair<Guid, int>> processedItems)
+        {
+            bool res = true;
+            foreach (KeyValuePair<Guid, int> kvp in processedItems)
+            {
+                var itemKey = kvp.Key;
+                var itemCount = kvp.Value;
+                var itemGrain = GrainFactory.GetGrain<IItemGrain>(itemKey);
+                res = res && await itemGrain.ModifyStock(itemCount);
+            }
+            return res;
         }
     }
 }

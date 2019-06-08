@@ -22,6 +22,7 @@ namespace Cart.API.Controllers
         public async Task<ActionResult> CreateItem()
         {
             var grain = _client.GetGrain<IItemGrain>(Guid.NewGuid());
+            await grain.ModifyPrice(new Random().Next(1, 50)); //give each item a random price from 1-50 on creation
             return Ok(await grain.GetItem());
         }
 

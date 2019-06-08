@@ -93,7 +93,7 @@ namespace Cart.API.Controllers
             }
             if (await grain.ModifyCredit(-1 * amount))
             {
-                return Ok(grainState);
+                return Ok(await grain.GetState()); //fetch new state to return updated values
             }
             return BadRequest(new MessageResult("Insufficient credit"));
         }
@@ -115,7 +115,7 @@ namespace Cart.API.Controllers
             }
             if (await grain.ModifyCredit(amount))
             {
-                return Ok(grainState);
+                return Ok(await grain.GetState()); //fetch new state to return updated values
             }
             return BadRequest(new MessageResult("Insufficient credit"));
         }

@@ -14,6 +14,8 @@ namespace GrainInterfaces.States
 
         public Guid UserId { get; set; }
 
+        public Guid PaymentId { get; set; }
+
         public decimal Total
         {
             get
