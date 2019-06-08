@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using GrainInterfaces;
 using Orleans;
 using System.Threading.Tasks;
-using GrainInterfaces.States;
 using Orleans.Providers;
+using GrainInterfaces.States;
 
 namespace Grains
 {
@@ -12,43 +12,55 @@ namespace Grains
     public class ItemGrain : Grain<ItemState>, IItemGrain
     {
 
-        public override Task OnActivateAsync() {
+        public override async Task OnActivateAsync() {
+            await ReadStateAsync();
+            State = State.Id != Guid.Empty ? State : new ItemState
+            {
+                Id = this.GetPrimaryKey(),
+                Price = 0,
+                Stock = 0
+            };
+            await base.OnActivateAsync();
+        }
 
-            if (State.Value == null) {
-
-                State.Value = new Item
-                {
-                    Id = Guid.NewGuid(),
-                    Price = 0,
-                    Stock = 0
-                };
-            }
-
-            return Task.CompletedTask;
+        public override async Task OnDeactivateAsync()
+        {
+            await WriteStateAsync();
+            await base.OnActivateAsync();
         }
    
-        public async Task<Item> GetItem()
+        public async Task<ItemState> GetItem()
         {
-            return State.Value;
+            return State;
         }
 
         public async Task<int> GetAvailability()
         {
-            return State.Value.Stock;
+            return State.Stock;
         }
 
-        public async Task<int> ModifyStock(int amount)
+        public async Task<bool> ModifyStock(int amount)
         {
-            State.Value.Stock += amount;
-            return State.Value.Stock;
+            if (State.Stock + amount < 0)
+            {
+                return false;
+            }
+            State.Stock += amount;
+            return true;
         }
 
         public async Task<decimal> ModifyPrice(decimal newPrice)
         {
-            State.Value.Price = newPrice;
-            return State.Value.Price;
+            State.Price = newPrice;
+            return State.Price;
         }
-        
+
+        public async Task<bool> Delete()
+        {
+            await ClearStateAsync();
+            return true;
+        }
+
     }
 
 }

@@ -1,16 +1,21 @@
 using System;
 using System.Threading.Tasks;
+using GrainInterfaces.States;
 using Orleans;
 
 namespace GrainInterfaces
 {
     public interface IOrderGrain: IGrainWithGuidKey
     {
-        Task<bool> AddItem(Guid itemGuid);
+        Task<OrderState> GetOrder();
+        
+        Task<bool> SetUser(IUserGrain userGrain);
 
-        Task<Guid> RemoveItem(Guid itemGuid);
+        Task<bool> AddItem(IItemGrain item);
 
-        Task<bool> CancelOrder();
+        Task<bool> RemoveItem(IItemGrain itemGuid);
+
+        Task<bool> DeleteOrder();
 
         Task<bool> Checkout();
     }

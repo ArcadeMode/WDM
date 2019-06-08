@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Orleans;
+﻿using Orleans;
 using System.Threading.Tasks;
+using GrainInterfaces.Enums;
 using GrainInterfaces.States;
 
 namespace GrainInterfaces
 {
     public interface IPaymentGrain : IGrainWithGuidKey
     {
-        Task<int> Pay();
+        Task<PaymentStatus> Pay(IUserGrain user, decimal amount);
 
-        Task<int> Cancel();
+        Task<PaymentStatus> Cancel();
 
-        Task<int> Status();
+        Task<PaymentStatus> Status();
 
     }
 }
