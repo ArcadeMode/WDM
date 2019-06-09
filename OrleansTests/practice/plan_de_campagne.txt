@@ -1,0 +1,31 @@
+Het doel: applicatie testen op scalability/performance + inconsistencies
+
+Eigenschappen Orleans:
+- one grain per instance
+- single threaded
+- grains are instances of a class
+- not sharing data between grains, but using messaging
+- no need to instantiate, create or delete grains
+- IDs are randomly chosen, 
+
+scalability:
+- We willen weten waar de bottlenecks van onze applicatie zitten, bij welke call wordt de applicatie verminderd
+- Testen wat er gebeurd als er vanuit 1 user veel gebeurd
+- Testen wat er gebeurd vanuit meerdere users
+- 
+
+consistency:
+- 
+
+tests:
+- elke call in de API tegelijk testen met verschillende users/items
+	- Multiple Logins:
+		https://octoperf.com/blog/2017/12/14/multiple-user-login-jmeter/
+- elke call in de API tegelijk testen vanuit dezelfde user
+- elke call apart maximaal testen op dezelfde user/item
+- elke call apart maximaal testen op verschillende users/items
+	- Multiple requests:
+		https://sqa.stackexchange.com/questions/20831/how-to-load-100-urls-as-http-request-in-jmeter
+- vanuit verschillende users dezelfde items getten/aanpassen
+- Use cases testen
+- Heel veel calls dezelfde user aanroepen

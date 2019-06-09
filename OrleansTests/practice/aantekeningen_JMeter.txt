@@ -1,0 +1,26 @@
+Tests:
+
+- response latencies over time (per request!!, good to know which request slows down server)
+- response times over time, to see which URL performs the quickest in returning a message
+- response times percentiles, 90.0 on x-axis shows how 90% of the tests finish within that time
+- response times vs threads, see how response time reacts to increased number of threads
+- transaction throughput vs threads, number of estimated transactions per second, allows you to see
+when the server starts peaking at which number of threads.
+- transactions per second
+- aggregate report, gives a summary
+- results tree: requests and data, good for troubleshooting
+
+
+
+Terms:
+- Latency: delay in 
+- Throughput: the amount of data 
+
+
+
+JMeter:
+- customize thread group plugin
+- template recording
+- able to make delays on threads with ultimate thread group
+- HTTP authorization manager
+- run threads groups consucetively (in test plan) om thread groups zich na elkaar af te laten spelen

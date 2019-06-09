@@ -1,0 +1,38 @@
+- hoe naar welke website laten sturen
+	- je kan een sampler met path sturen
+- hoe verstuur je welk soort bericht
+	- sampler
+- hoe voeg je threads toe?
+	- add thread group
+- hoe laat je verschillende berichten versturen?
+	- meerdere samplers bij group (?!)
+- authentication
+- verschillende requests 1 user
+	- meerdere samplers toepassen
+- hoe werken de grafiek tests
+	- response latencies over time (per request!!, good to know which request slows down server)
+	- response times over time, to see which URL performs the best
+	- response times percentiles, 90.0 on x-axis shows how 90% of the tests finish within that time
+	- response times vs threas, see how response time reacts to increased number of threads
+	- transaction throughput vs threads, number of estimated transactions per second, allows you to see
+	when the server starts peaking at which number of threads.
+	- transactions per second
+	- aggregate report, gives a summary
+- in dat filmpje krijgt ie meerdere urls/requests te zien, ik niet, hoezo?
+	- de namen moeten verschillend zijn, anders ziet JMeter ze als hetzelfde
+- ik kan maar een x requests sturen, ik krijg dan een bindexception terug, fix dit
+	- enable fast recycling TIME_WAIT sockets
+	- echo 1 > /proc/sys/net/ipv4/tcp_tw_recycle
+	- https://support.huawei.com/enterprise/en/doc/EDOC1100044388/6de15abb/how-do-i-reduce-the-time-for-canceling-tcp-connections-in-time_wait-state-on-windows
+
+- als the requests na elkaar doet in een thread group, voert hij ze dan pas uit na response vorige request?
+- een documentje maken met alle tests, welke waarom testen
+	- wat is throughput
+	- hoe spot je een bottleneck?
+- hoe stuur je requests als je ingelogd bent?
+- ga ik per thread group met 1 request werken of meerdere requests?
+- hoe werken de table tests
+
+
+- hoe ga ik consistency testen?
+- waar zullen waarschijnlijk de bottlenecks zitten?
