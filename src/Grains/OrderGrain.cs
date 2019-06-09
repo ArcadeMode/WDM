@@ -70,7 +70,8 @@ namespace Grains
 
         public async Task<bool> Checkout()
         {
-            var paymentGrain = GrainFactory.GetGrain<IPaymentGrain>(State.PaymentId);
+            var paymentGrain = GrainFactory.GetGrain<IPaymentGrain>(State.PaymentId == Guid.Empty ? Guid.NewGuid() : State.PaymentId);
+            State.PaymentId = paymentGrain.GetPrimaryKey();
             if(await paymentGrain.Status() != PaymentStatus.Pending)
             {
                 return false; //order already processed
@@ -79,6 +80,7 @@ namespace Grains
             decimal totalSum = 0;
             var orderItems = State.Items;
             var processedItems = new List<KeyValuePair<Guid, int>>();
+            bool doRollback = false;
             foreach (KeyValuePair<Guid, int> kvp in orderItems )
             {
                 var itemKey = kvp.Key;
@@ -95,10 +97,16 @@ namespace Grains
                     processedItems.Add(kvp);
                 } else
                 {   //insufficient stock
-                    await RollBackStockChanges(processedItems);
+                    doRollback = true;
                     break;
                 }
             }
+            if(doRollback)
+            {
+                await RollBackStockChanges(processedItems);
+                return false;
+            }
+
             var userGrain = GrainFactory.GetGrain<IUserGrain>(State.UserId);
             if(await paymentGrain.Pay(userGrain, totalSum) == PaymentStatus.Paid)
             {
