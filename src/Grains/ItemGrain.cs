@@ -46,12 +46,14 @@ namespace Grains
                 return false;
             }
             State.Stock += amount;
+            await WriteStateAsync();
             return true;
         }
 
         public async Task<decimal> ModifyPrice(decimal newPrice)
         {
             State.Price = newPrice;
+            await WriteStateAsync();
             return State.Price;
         }
 

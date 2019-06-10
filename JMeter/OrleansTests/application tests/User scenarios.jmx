@@ -10,7 +10,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="item_id" elementType="Argument">
             <stringProp name="Argument.name">item_id</stringProp>
-            <stringProp name="Argument.value">21b6f877-d2cd-4485-8e78-3619a1c37822</stringProp>
+            <stringProp name="Argument.value">fef46bb3-4030-4cd6-bf81-cedd0cab1372</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="users_items_orders_folder" elementType="Argument">
@@ -20,7 +20,7 @@
           </elementProp>
           <elementProp name="threads" elementType="Argument">
             <stringProp name="Argument.name">threads</stringProp>
-            <stringProp name="Argument.value">512</stringProp>
+            <stringProp name="Argument.value">300</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>

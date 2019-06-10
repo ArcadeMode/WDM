@@ -35,6 +35,7 @@ namespace Grains
 
         public async Task<bool> SetUser(IUserGrain userGrain) {
             State.UserId = userGrain.GetPrimaryKey();
+            await WriteStateAsync();
             return true;
         }
 
@@ -53,11 +54,13 @@ namespace Grains
             {
                 State.Items.Add(itemKey, 1);
             }
+            await WriteStateAsync();
             return true;
         }
 
         public async Task<bool> RemoveItem(IItemGrain item)
         {
+            await WriteStateAsync();
             return State.Items.Remove(item.GetPrimaryKey());
         }
 
@@ -111,6 +114,7 @@ namespace Grains
             if(await paymentGrain.Pay(userGrain, totalSum) == PaymentStatus.Paid)
             {
                 //payment succesfull & stock subtracted succesfull
+                await WriteStateAsync();
                 return true;
             } 
             //insufficient credits
