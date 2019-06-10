@@ -37,7 +37,7 @@ namespace Grains
         public async Task<bool> ModifyCredit(decimal amount)
         {
             var balanceAfterChange = State.Balance + amount;
-            if (!(balanceAfterChange > 0))
+            if (balanceAfterChange < 0)
             {
                 return false;
                 //throw new Exception("Not enough credits!");
