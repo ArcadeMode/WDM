@@ -83,7 +83,7 @@ new File(&quot;Items.txt&quot;) &lt;&lt; Parameters + System.getProperty(&quot;l
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">item/${item}/add/300</stringProp>
+          <stringProp name="HTTPSampler.path">item/${item}/add/100000</stringProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
