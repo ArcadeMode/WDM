@@ -1,0 +1,10 @@
+opslaan in CSV: https://stackoverflow.com/questions/51630622/how-to-extract-response-data-json-and-save-variable-to-csv-file-in-jmeter
+re-use as variable: https://www.redline13.com/blog/2018/09/jmeter-extract-and-re-use-as-variable/
+https://www.blazemeter.com/blog/how-to-use-the-json-plugin-in-jmeter
+https://stackoverflow.com/questions/47173439/use-jmeter-variable-in-groovy-code
+
+
+
+
+
+

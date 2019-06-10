@@ -1,0 +1,17 @@
+- download package manager, activeer in JMeter:
+	- 3 basic graphs
+	- 5 additional graphs
+	- Distribution/Percentile graphs
+	- KPI vs KPI graphs
+	- parallel controller & sampler
+
+- https://support.huawei.com/enterprise/en/doc/EDOC1100044388/6de15abb/how-do-i-reduce-the-time-for-canceling-tcp-connections-in-time_wait-state-on-windows
+	- ik weet niet hoeveel het command nog van toepassing is
+
+- in regedit: "MaxUserPort = 65000" toegevoegd
+- in regedit: "TcpTimedWaitDelay = 30" toegevoegd
+- in regedit: "StrictTimeWaitSeqCheck = 1" toegevoegd
+
+Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+
+kijken of je registry kan resetten
