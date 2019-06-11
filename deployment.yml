@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: wdm4containerregistry.azurecr.io/api:latest
+        image: orleans.azurecr.io/api:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -56,7 +56,7 @@ spec:
     spec:
       containers:
       - name: silo
-        image: wdm4containerregistry.azurecr.io/silo:latest
+        image: orleans.azurecr.io/silo:latest
         imagePullPolicy: Always
         env:
         - name: ClusterId
