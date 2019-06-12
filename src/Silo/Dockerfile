@@ -9,10 +9,10 @@ COPY ["src/Grains/Grains.csproj", "src/Grains/"]
 RUN dotnet restore "src/Silo/Silo.csproj"
 COPY . .
 WORKDIR "/src/src/Silo"
-RUN dotnet build "Silo.csproj" -c Debug -o /app
+RUN dotnet build "Silo.csproj" -o /app
 
 FROM build AS publish
-RUN dotnet publish "Silo.csproj" -c Debug -o /app
+RUN dotnet publish "Silo.csproj" -o /app
 
 FROM base AS final
 WORKDIR /app

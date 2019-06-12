@@ -9,10 +9,10 @@ COPY ["src/GrainInterfaces/GrainInterfaces.csproj", "src/GrainInterfaces/"]
 RUN dotnet restore "src/Cart.API/Cart.API.csproj"
 COPY . .
 WORKDIR "/src/src/Cart.API"
-RUN dotnet build "Cart.API.csproj" -c Debug -o /app
+RUN dotnet build "Cart.API.csproj" -o /app
 
 FROM build AS publish
-RUN dotnet publish "Cart.API.csproj" -c Debug -o /app
+RUN dotnet publish "Cart.API.csproj" -o /app
 
 FROM base AS final
 WORKDIR /app
