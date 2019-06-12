@@ -1,4 +1,7 @@
-/net-binnen
+/hallo
 /algemeen
-/verkiezingen
-/binnenland
+
+hoi
+hoi
+hoi
+hoi
